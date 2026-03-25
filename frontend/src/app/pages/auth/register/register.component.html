@@ -1,0 +1,417 @@
+<div class="auth-page">
+  <div class="auth-container">
+
+    <!-- ===== LEFT PANEL — Branding ===== -->
+    <div class="auth-branding">
+      <!-- Decorative blobs -->
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
+
+      <div class="branding-content">
+        <div class="brand-logo-row">
+          <div class="brand-logo-icon">
+            <i class="bi bi-globe2"></i>
+          </div>
+          <span class="brand-name">Community</span>
+        </div>
+
+        <!-- Step-reactive headline -->
+        @if (currentStep() === 1) {
+          <div class="step-brand-text step-enter">
+            <h1 class="brand-headline">
+              Start your journey<br />
+              <span class="brand-headline-sub">today. It's free.</span>
+            </h1>
+            <p class="brand-desc">
+              Create your account in seconds and join thousands of passionate people building meaningful connections.
+            </p>
+          </div>
+        }
+        @if (currentStep() === 2) {
+          <div class="step-brand-text step-enter">
+            <h1 class="brand-headline">
+              Where are you<br />
+              <span class="brand-headline-sub">based?</span>
+            </h1>
+            <p class="brand-desc">
+              Tell us your location so we can connect you with communities near you across the UK.
+            </p>
+          </div>
+        }
+        @if (currentStep() === 3) {
+          <div class="step-brand-text step-enter">
+            <h1 class="brand-headline">
+              What are you<br />
+              <span class="brand-headline-sub">passionate about?</span>
+            </h1>
+            <p class="brand-desc">
+              Choose your interests and we'll match you with the best communities for you.
+            </p>
+          </div>
+        }
+
+        <ul class="feature-list">
+          <li>
+            <span class="feature-icon"><i class="bi bi-check-circle-fill"></i></span>
+            <span>10,000+ active members across the UK</span>
+          </li>
+          <li>
+            <span class="feature-icon"><i class="bi bi-check-circle-fill"></i></span>
+            <span>500+ communities across every topic</span>
+          </li>
+          <li>
+            <span class="feature-icon"><i class="bi bi-check-circle-fill"></i></span>
+            <span>Free forever — no credit card needed</span>
+          </li>
+        </ul>
+
+        <div class="avatar-row">
+          <div class="avatar-stack">
+            <div class="av av-1">A</div>
+            <div class="av av-2">B</div>
+            <div class="av av-3">C</div>
+            <div class="av av-4">D</div>
+          </div>
+          <span class="avatar-row-text">Join thousands already connected</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== RIGHT PANEL — Form ===== -->
+    <div class="auth-form-wrapper">
+
+      <!-- Mobile-only top logo -->
+      <div class="mobile-logo">
+        <div class="mobile-logo-icon">
+          <i class="bi bi-globe2"></i>
+        </div>
+        <span>Community</span>
+      </div>
+
+      <div class="auth-card">
+        <div class="auth-card-header">
+          <h2>Create your account</h2>
+          <p class="subtitle">Fill in your details to get started for free</p>
+        </div>
+
+        <!-- Step Progress Indicator -->
+        <div class="step-progress">
+          @for (step of [1, 2, 3]; track step) {
+            <div class="step-item" [class.active]="currentStep() >= step" [class.completed]="currentStep() > step">
+              <div class="step-circle" [class.step-bounce]="currentStep() === step">
+                @if (currentStep() > step) {
+                  <i class="bi bi-check-lg"></i>
+                } @else {
+                  {{ step }}
+                }
+              </div>
+              <span class="step-label">
+                @switch (step) {
+                  @case (1) { Basic Info }
+                  @case (2) { Location }
+                  @case (3) { Interests }
+                }
+              </span>
+            </div>
+            @if (step < 3) {
+              <div class="step-line" [class.active]="currentStep() > step"></div>
+            }
+          }
+        </div>
+
+        <!-- ===== Step 1: Basic Info ===== -->
+        @if (currentStep() === 1) {
+          <div class="step-form-enter">
+            <form [formGroup]="step1Form" (ngSubmit)="nextStep()" class="auth-form" autocomplete="on">
+
+              <!-- Name row -->
+              <div class="field-row">
+                <div class="field-group">
+                  <label class="field-label" for="reg-firstName">First Name</label>
+                  <div class="field-input-wrap">
+                    <i class="bi bi-person field-icon"></i>
+                    <input
+                      id="reg-firstName"
+                      type="text"
+                      formControlName="firstName"
+                      placeholder="John"
+                      autocomplete="given-name"
+                      class="field-input"
+                      [class.is-invalid]="f1['firstName'].touched && f1['firstName'].invalid"
+                    />
+                  </div>
+                  @if (f1['firstName'].touched && f1['firstName'].invalid) {
+                    <div class="field-error">
+                      @if (f1['firstName'].errors?.['required']) { First name is required. }
+                      @else if (f1['firstName'].errors?.['minlength']) { Minimum 2 characters. }
+                    </div>
+                  }
+                </div>
+
+                <div class="field-group">
+                  <label class="field-label" for="reg-lastName">Last Name</label>
+                  <div class="field-input-wrap">
+                    <i class="bi bi-person field-icon"></i>
+                    <input
+                      id="reg-lastName"
+                      type="text"
+                      formControlName="lastName"
+                      placeholder="Doe"
+                      autocomplete="family-name"
+                      class="field-input"
+                      [class.is-invalid]="f1['lastName'].touched && f1['lastName'].invalid"
+                    />
+                  </div>
+                  @if (f1['lastName'].touched && f1['lastName'].invalid) {
+                    <div class="field-error">
+                      @if (f1['lastName'].errors?.['required']) { Last name is required. }
+                      @else if (f1['lastName'].errors?.['minlength']) { Minimum 2 characters. }
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <!-- Email -->
+              <div class="field-group">
+                <label class="field-label" for="reg-email">Email address</label>
+                <div class="field-input-wrap">
+                  <i class="bi bi-envelope field-icon"></i>
+                  <input
+                    id="reg-email"
+                    type="email"
+                    formControlName="email"
+                    placeholder="you@example.com"
+                    autocomplete="email"
+                    class="field-input"
+                    [class.is-invalid]="f1['email'].touched && f1['email'].invalid"
+                  />
+                </div>
+                @if (f1['email'].touched && f1['email'].invalid) {
+                  <div class="field-error">
+                    @if (f1['email'].errors?.['required']) { Email is required. }
+                    @else if (f1['email'].errors?.['email']) { Please enter a valid email address. }
+                  </div>
+                }
+              </div>
+
+              <!-- Password -->
+              <div class="field-group">
+                <label class="field-label" for="reg-password">Password</label>
+                <div class="field-input-wrap">
+                  <i class="bi bi-lock field-icon"></i>
+                  <input
+                    id="reg-password"
+                    [type]="showPassword() ? 'text' : 'password'"
+                    formControlName="password"
+                    placeholder="At least 6 characters"
+                    autocomplete="new-password"
+                    class="field-input"
+                    [class.is-invalid]="f1['password'].touched && f1['password'].invalid"
+                  />
+                  <button
+                    type="button"
+                    class="toggle-pw-btn"
+                    (click)="showPassword.set(!showPassword())"
+                    tabindex="-1"
+                    aria-label="Toggle password visibility"
+                  >
+                    <i class="bi" [class.bi-eye-slash]="!showPassword()" [class.bi-eye]="showPassword()"></i>
+                  </button>
+                </div>
+                @if (f1['password'].touched && f1['password'].invalid) {
+                  <div class="field-error">
+                    @if (f1['password'].errors?.['required']) { Password is required. }
+                    @else if (f1['password'].errors?.['minlength']) { Password must be at least 6 characters. }
+                  </div>
+                }
+              </div>
+
+              <!-- Confirm Password -->
+              <div class="field-group">
+                <label class="field-label" for="reg-confirmPassword">Confirm Password</label>
+                <div class="field-input-wrap">
+                  <i class="bi bi-lock field-icon"></i>
+                  <input
+                    id="reg-confirmPassword"
+                    [type]="showPassword() ? 'text' : 'password'"
+                    formControlName="confirmPassword"
+                    placeholder="Re-enter your password"
+                    autocomplete="new-password"
+                    class="field-input"
+                    [class.is-invalid]="f1['confirmPassword'].touched && f1['confirmPassword'].invalid"
+                  />
+                </div>
+                @if (f1['confirmPassword'].touched && f1['confirmPassword'].invalid) {
+                  <div class="field-error">
+                    @if (f1['confirmPassword'].errors?.['required']) { Please confirm your password. }
+                    @else if (f1['confirmPassword'].errors?.['passwordMismatch']) { Passwords do not match. }
+                  </div>
+                }
+              </div>
+
+              <button type="submit" class="submit-btn">
+                Next Step <i class="bi bi-arrow-right ms-1"></i>
+              </button>
+            </form>
+          </div>
+        }
+
+        <!-- ===== Step 2: Location ===== -->
+        @if (currentStep() === 2) {
+          <div class="step-form-enter">
+            <form [formGroup]="step2Form" (ngSubmit)="nextStep()" class="auth-form" autocomplete="on">
+
+              <!-- Country -->
+              <div class="field-group">
+                <label class="field-label" for="reg-country">Country</label>
+                <div class="field-input-wrap">
+                  <i class="bi bi-globe field-icon"></i>
+                  <select
+                    id="reg-country"
+                    formControlName="country"
+                    class="field-input field-select"
+                    [class.is-invalid]="f2['country'].touched && f2['country'].invalid"
+                  >
+                    <option value="UK">United Kingdom</option>
+                    <option value="US">United States</option>
+                    <option value="CA">Canada</option>
+                    <option value="AU">Australia</option>
+                    <option value="IN">India</option>
+                    <option value="DE">Germany</option>
+                    <option value="FR">France</option>
+                  </select>
+                </div>
+                @if (f2['country'].touched && f2['country'].invalid) {
+                  <div class="field-error">Country is required.</div>
+                }
+              </div>
+
+              <!-- City / Town -->
+              <div class="field-group">
+                <label class="field-label" for="reg-location">City / Town</label>
+                <div class="field-input-wrap">
+                  <i class="bi bi-geo-alt field-icon"></i>
+                  <input
+                    id="reg-location"
+                    type="text"
+                    formControlName="location"
+                    placeholder="e.g. London, Manchester"
+                    autocomplete="address-level2"
+                    class="field-input"
+                    [class.is-invalid]="f2['location'].touched && f2['location'].invalid"
+                  />
+                </div>
+                @if (f2['location'].touched && f2['location'].invalid) {
+                  <div class="field-error">Location is required.</div>
+                }
+              </div>
+
+              <!-- Postcode -->
+              <div class="field-group">
+                <label class="field-label" for="reg-pincode">Postcode / PIN Code</label>
+                <div class="field-input-wrap">
+                  <i class="bi bi-mailbox field-icon"></i>
+                  <input
+                    id="reg-pincode"
+                    type="text"
+                    formControlName="pincode"
+                    placeholder="e.g. SW1A 1AA"
+                    autocomplete="postal-code"
+                    class="field-input"
+                    [class.is-invalid]="f2['pincode'].touched && f2['pincode'].invalid"
+                  />
+                </div>
+                @if (f2['pincode'].touched && f2['pincode'].invalid) {
+                  <div class="field-error">Postcode is required.</div>
+                }
+              </div>
+
+              <div class="btn-row">
+                <button type="button" class="back-btn" (click)="prevStep()">
+                  <i class="bi bi-arrow-left me-1"></i> Back
+                </button>
+                <button type="submit" class="submit-btn">
+                  Next Step <i class="bi bi-arrow-right ms-1"></i>
+                </button>
+              </div>
+            </form>
+          </div>
+        }
+
+        <!-- ===== Step 3: Interests ===== -->
+        @if (currentStep() === 3) {
+          <div class="step-form-enter">
+            <form [formGroup]="step3Form" (ngSubmit)="onSubmit()" class="auth-form" autocomplete="off">
+
+              <!-- Interest tags -->
+              <div class="field-group">
+                <label class="field-label">Select your interests</label>
+                <div class="interests-grid">
+                  @for (interest of interestOptions; track interest; let i = $index) {
+                    <button
+                      type="button"
+                      class="interest-tag"
+                      [class.selected]="isInterestSelected(interest)"
+                      [style.animation-delay]="(i * 50) + 'ms'"
+                      (click)="toggleInterest(interest)"
+                    >
+                      {{ interest }}
+                    </button>
+                  }
+                </div>
+                @if (f3['interests'].touched && f3['interests'].invalid) {
+                  <div class="field-error">Please select at least one interest.</div>
+                }
+              </div>
+
+              <!-- Professional Category -->
+              <div class="field-group">
+                <label class="field-label" for="reg-professionalCategory">Professional Category</label>
+                <div class="field-input-wrap">
+                  <i class="bi bi-briefcase field-icon"></i>
+                  <select
+                    id="reg-professionalCategory"
+                    formControlName="professionalCategory"
+                    class="field-input field-select"
+                    [class.is-invalid]="f3['professionalCategory'].touched && f3['professionalCategory'].invalid"
+                  >
+                    <option value="" disabled>Select a category</option>
+                    @for (category of professionalCategories; track category) {
+                      <option [value]="category">{{ category }}</option>
+                    }
+                  </select>
+                </div>
+                @if (f3['professionalCategory'].touched && f3['professionalCategory'].invalid) {
+                  <div class="field-error">Please select a professional category.</div>
+                }
+              </div>
+
+              <div class="btn-row">
+                <button type="button" class="back-btn" (click)="prevStep()">
+                  <i class="bi bi-arrow-left me-1"></i> Back
+                </button>
+                <button type="submit" class="submit-btn" [disabled]="loading()">
+                  @if (loading()) {
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Creating Account...
+                  } @else {
+                    <i class="bi bi-person-plus me-1"></i>
+                    Create Account
+                  }
+                </button>
+              </div>
+            </form>
+          </div>
+        }
+
+        <!-- Switch auth -->
+        <p class="switch-auth">
+          Already have an account?
+          <a routerLink="/auth/login" class="switch-link">Sign in &rarr;</a>
+        </p>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,888 @@
+// ============================================================
+// User Dashboard — Round 2: Previous Project Design Language
+// ============================================================
+// Design tokens aligned with Community_Application project
+
+// ---- Design Tokens ----
+$primary:       #5865f2;
+$primary-light: #ede9fe;
+$primary-dark:  #4752c4;
+$accent:        #eb459e;
+$dark:          #0f0f1a;
+$text:          #374151;
+$muted:         #9ca3af;
+$border:        #e5e7eb;
+$bg:            #f4f5ff;
+$white:         #ffffff;
+$success:       #22c55e;
+$danger:        #ef4444;
+$warning:       #f97316;
+$radius:        16px;
+$transition:    0.2s ease;
+$shimmer-gradient: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+
+// ============================================================
+// SHIMMER SKELETON LOADER
+// ============================================================
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.dashboard-skeleton {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+
+  @media (max-width: 1024px) { grid-template-columns: 1fr 280px; gap: 16px; }
+  @media (max-width: 768px)  { grid-template-columns: 1fr; }
+}
+
+.sk-feed, .sk-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sk-card {
+  background: $white;
+  border: 1px solid $border;
+  border-radius: $radius;
+  padding: 20px;
+}
+
+.sk-banner {
+  height: 80px;
+  border-radius: $radius;
+  background: $shimmer-gradient;
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+.sk-stat-row {
+  display: flex;
+  gap: 12px;
+}
+
+.sk-stat {
+  flex: 1;
+  height: 72px;
+  border-radius: $radius;
+  background: $shimmer-gradient;
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+.sk-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.sk-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: $shimmer-gradient;
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite;
+  flex-shrink: 0;
+}
+
+.sk-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.sk-line {
+  height: 12px;
+  border-radius: 6px;
+  background: $shimmer-gradient;
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite;
+  width: 100%;
+
+  &.sk-short  { width: 35%; }
+  &.sk-medium { width: 60%; }
+  &.sk-title  { height: 16px; width: 50%; }
+}
+
+.sk-ring {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: $shimmer-gradient;
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite;
+  margin: 0 auto 12px;
+}
+
+// ============================================================
+// DASHBOARD LAYOUT — 2-Column CSS Grid
+// ============================================================
+.dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboard-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+  align-items: start;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr 280px;
+    gap: 16px;
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.feed-col {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sidebar-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: sticky;
+  top: 88px;
+
+  @media (max-width: 768px) {
+    position: static;
+  }
+}
+
+// ============================================================
+// WELCOME BANNER
+// ============================================================
+.welcome-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, $primary 0%, $accent 100%);
+  border-radius: $radius;
+  padding: 20px 24px;
+  color: $white;
+  gap: 16px;
+
+  .welcome-text {
+    h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin: 0 0 4px;
+    }
+    p {
+      font-size: 13px;
+      margin: 0;
+      opacity: 0.85;
+    }
+    .welcome-date {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      opacity: 0.75;
+      margin-top: 4px;
+      i { font-size: 11px; }
+    }
+  }
+
+  .explore-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(8px);
+    color: $white;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 20px;
+    white-space: nowrap;
+    transition: background $transition;
+    flex-shrink: 0;
+
+    i { font-size: 14px; }
+    &:hover { background: rgba(255, 255, 255, 0.28); }
+  }
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px;
+    .welcome-text h2 { font-size: 1rem; }
+    .explore-link { width: 100%; justify-content: center; }
+  }
+}
+
+// ============================================================
+// STATS ROW
+// ============================================================
+.stats-row {
+  display: flex;
+  gap: 12px;
+
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+  }
+  @media (max-width: 480px) {
+    gap: 8px;
+  }
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 0;
+  background: $white;
+  border: 1px solid $border;
+  border-radius: $radius;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: box-shadow $transition, transform $transition;
+
+  &:hover {
+    box-shadow: 0 6px 24px rgba(88, 101, 242, 0.08);
+    transform: translateY(-1px);
+  }
+
+  .stat-icon-wrap {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    i { font-size: 15px; }
+  }
+
+  .stat-info {
+    min-width: 0;
+  }
+
+  .stat-value {
+    font-size: 22px;
+    font-weight: 800;
+    color: $dark;
+    margin: 0;
+    line-height: 1.2;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: $muted;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  @media (max-width: 768px) {
+    flex: 0 0 calc(50% - 6px);
+  }
+  @media (max-width: 480px) {
+    flex: 0 0 calc(50% - 4px);
+    padding: 10px 12px;
+    gap: 8px;
+
+    .stat-icon-wrap {
+      width: 32px; height: 32px; min-width: 32px;
+      border-radius: 8px;
+      i { font-size: 13px; }
+    }
+    .stat-value { font-size: 18px; }
+    .stat-label { font-size: 10px; }
+  }
+}
+
+// ============================================================
+// SHARED DASH-CARD — bordered, no box-shadow at rest
+// ============================================================
+.dash-card {
+  background: $white;
+  border: 1px solid $border;
+  border-radius: $radius;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow $transition, transform $transition;
+
+  &:hover {
+    box-shadow: 0 6px 24px rgba(88, 101, 242, 0.08);
+    transform: translateY(-1px);
+  }
+}
+
+.dash-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid #f3f4f6;
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .header-icon {
+    font-size: 16px;
+    color: $primary;
+    flex-shrink: 0;
+  }
+
+  .header-title {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: $dark;
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  .btn-view-all {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: $primary;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity $transition;
+    &:hover { text-decoration: underline; }
+  }
+}
+
+// ============================================================
+// RECENT POSTS (left column)
+// ============================================================
+.posts-card {
+  .post-list {
+    max-height: 420px;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar { width: 4px; }
+    &::-webkit-scrollbar-track { background: transparent; }
+    &::-webkit-scrollbar-thumb { background: #d0d0d0; border-radius: 3px; }
+  }
+}
+
+.post-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  color: $text;
+  transition: background 0.15s;
+  border-bottom: 1px solid #f3f4f6;
+
+  &:last-child { border-bottom: none; }
+  &:hover { background: $bg; }
+}
+
+.post-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $primary 0%, $accent 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.post-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.post-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+
+.post-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 20px;
+  color: $white;
+
+  &.badge-emergency { background: $danger; }
+  &.badge-help { background: $warning; }
+  &.badge-general { background: $primary; }
+}
+
+.post-community {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: $primary;
+}
+
+.post-time {
+  font-size: 11px;
+  color: $muted;
+  margin-left: auto;
+}
+
+.post-content {
+  font-size: 13px;
+  line-height: 1.5;
+  color: $text;
+  margin: 0 0 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.post-actions-row {
+  display: flex;
+  gap: 12px;
+}
+
+.post-action {
+  font-size: 12px;
+  color: $muted;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: color 0.15s;
+
+  i { font-size: 13px; }
+  &:hover { color: $primary; }
+}
+
+// Posts empty state
+.posts-empty {
+  text-align: center;
+  padding: 40px 24px;
+
+  .empty-illustration { margin-bottom: 12px; opacity: 0.6; }
+
+  h6 {
+    font-size: 14px;
+    font-weight: 700;
+    color: $dark;
+    margin: 0 0 4px;
+  }
+
+  p {
+    font-size: 13px;
+    color: $muted;
+    margin: 0 0 16px;
+  }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: $primary;
+    color: $white;
+    padding: 8px 16px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: opacity $transition;
+
+    &:hover { opacity: 0.9; }
+  }
+}
+
+// ============================================================
+// SIDEBAR CARD — shared base
+// ============================================================
+.sidebar-card {
+  background: $white;
+  border: 1px solid $border;
+  border-radius: $radius;
+  overflow: hidden;
+  transition: box-shadow $transition, transform $transition;
+
+  &:hover {
+    box-shadow: 0 6px 24px rgba(88, 101, 242, 0.08);
+    transform: translateY(-1px);
+  }
+}
+
+.sidebar-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 16px 10px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: $dark;
+  border-bottom: 1px solid #f3f4f6;
+
+  i.header-ico { font-size: 16px; color: $primary; }
+}
+
+// ============================================================
+// SIDEBAR — Profile Completion
+// ============================================================
+.profile-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.progress-ring-wrapper {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin-bottom: 10px;
+}
+
+.progress-ring {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.progress-ring-bg {
+  fill: none;
+  stroke: $border;
+  stroke-width: 6;
+}
+
+.progress-ring-fill {
+  fill: none;
+  stroke: $primary;
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-dasharray: 264;
+  transition: stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-ring-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  line-height: 1;
+
+  .pct-value {
+    font-size: 18px;
+    font-weight: 800;
+    color: $dark;
+  }
+  .pct-symbol {
+    font-size: 11px;
+    font-weight: 600;
+    color: $muted;
+  }
+}
+
+.profile-strength {
+  font-size: 12px;
+  font-weight: 600;
+  color: $primary;
+  margin-bottom: 12px;
+}
+
+.profile-checklist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 12px;
+    color: $text;
+
+    &:last-child { border-bottom: none; }
+
+    i.bi-circle { font-size: 6px; color: $muted; }
+    i.bi-check-circle-fill { font-size: 12px; color: $success; }
+
+    span { flex: 1; }
+
+    a {
+      color: $primary;
+      text-decoration: none;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      transition: opacity $transition;
+      &:hover { opacity: 0.7; }
+    }
+  }
+}
+
+.profile-complete-msg {
+  text-align: center;
+  padding: 8px 0;
+
+  i { font-size: 24px; color: $success; display: block; margin-bottom: 4px; }
+  p { font-size: 12px; color: $muted; margin: 0; }
+}
+
+// ============================================================
+// SIDEBAR — Notifications Panel
+// ============================================================
+.notif-header-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid #f3f4f6;
+
+  i.header-ico { font-size: 16px; color: $primary; flex-shrink: 0; }
+
+  .header-title {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: $dark;
+    margin: 0;
+  }
+
+  .unread-badge {
+    font-size: 11px;
+    font-weight: 700;
+    background: $accent;
+    color: $white;
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
+
+  .btn-mark-read {
+    margin-left: auto;
+    background: none;
+    border: 1px solid $border;
+    color: $muted;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background $transition, color $transition;
+    white-space: nowrap;
+
+    &:hover { background: $bg; color: $dark; }
+  }
+}
+
+.notification-list {
+  max-height: 260px;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: #d0d0d0; border-radius: 3px; }
+}
+
+.notification-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 16px;
+  border-bottom: 1px solid #f3f4f6;
+  cursor: pointer;
+  transition: background 0.15s;
+
+  &:last-child { border-bottom: none; }
+  &:hover { background: $bg; }
+  &.unread { background: #fafaff; }
+
+  .notif-icon {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $primary-light;
+    flex-shrink: 0;
+
+    i { font-size: 13px; }
+  }
+
+  .notif-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .notif-message {
+    font-size: 12px;
+    color: $dark;
+    margin: 0 0 2px;
+    line-height: 1.4;
+  }
+
+  .notif-time {
+    font-size: 11px;
+    color: $muted;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+
+    i { font-size: 10px; }
+  }
+
+  .unread-dot {
+    width: 7px;
+    height: 7px;
+    min-width: 7px;
+    border-radius: 50%;
+    background: $accent;
+    margin-top: 4px;
+    animation: pulseDot 2s ease-in-out infinite;
+  }
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.notif-empty {
+  padding: 24px 16px;
+  text-align: center;
+
+  i { font-size: 28px; color: $border; display: block; margin-bottom: 6px; }
+  p { font-size: 13px; font-weight: 600; color: $dark; margin: 0; }
+  span { font-size: 11px; color: $muted; }
+}
+
+.see-all-link {
+  display: block;
+  text-align: center;
+  padding: 10px 16px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: $primary;
+  text-decoration: none;
+  border-top: 1px solid #f3f4f6;
+
+  &:hover { text-decoration: underline; }
+}
+
+// ============================================================
+// SIDEBAR — Quick Actions
+// ============================================================
+.quick-actions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: $border;
+}
+
+.qa-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  background: $white;
+  text-decoration: none;
+  color: $text;
+  transition: background 0.15s;
+
+  &:hover { background: $bg; }
+
+  .qa-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    i { font-size: 15px; }
+  }
+
+  .qa-info {
+    flex: 1;
+    min-width: 0;
+
+    strong {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: $dark;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    span {
+      display: block;
+      font-size: 11px;
+      color: $muted;
+    }
+  }
+}
+
+// ============================================================
+// RESPONSIVE
+// ============================================================
+@media (max-width: 768px) {
+  .stats-row { gap: 8px; }
+  .post-time { display: none; }
+}
+
+@media (max-width: 480px) {
+  .notification-list { max-height: 200px; }
+}
+
+// ============================================================
+// REDUCED MOTION
+// ============================================================
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-skeleton *,
+  .sk-banner, .sk-stat, .sk-avatar, .sk-line, .sk-ring {
+    animation: none !important;
+    background: #f0f0f0 !important;
+  }
+
+  .stat-card, .dash-card, .sidebar-card,
+  .notification-item, .post-item, .qa-item {
+    transition: none !important;
+  }
+
+  .unread-dot {
+    animation: none !important;
+  }
+
+  .progress-ring-fill {
+    transition: none !important;
+  }
+}

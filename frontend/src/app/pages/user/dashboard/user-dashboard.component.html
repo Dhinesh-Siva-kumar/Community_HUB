@@ -1,0 +1,252 @@
+<!-- ============================================================ -->
+<!-- SHIMMER SKELETON LOADING STATE                              -->
+<!-- ============================================================ -->
+@if (loading()) {
+  <div class="dashboard-skeleton">
+    <!-- Skeleton: Feed column -->
+    <div class="sk-feed">
+      <div class="sk-banner"></div>
+      <div class="sk-stat-row">
+        @for (_ of [1,2,3,4,5]; track _) {
+          <div class="sk-stat"></div>
+        }
+      </div>
+      @for (_ of [1,2]; track _) {
+        <div class="sk-card">
+          <div class="sk-header">
+            <div class="sk-avatar"></div>
+            <div class="sk-lines">
+              <div class="sk-line sk-short"></div>
+              <div class="sk-line sk-medium"></div>
+            </div>
+          </div>
+          <div class="sk-line sk-title"></div>
+          <div class="sk-line"></div>
+          <div class="sk-line sk-medium"></div>
+        </div>
+      }
+    </div>
+    <!-- Skeleton: Sidebar column -->
+    <div class="sk-sidebar">
+      <div class="sk-card" style="padding: 24px; text-align: center;">
+        <div class="sk-ring"></div>
+        <div class="sk-line sk-short" style="margin: 0 auto 8px;"></div>
+        <div class="sk-line sk-medium" style="margin: 0 auto;"></div>
+      </div>
+      <div class="sk-card">
+        <div class="sk-line sk-title" style="margin-bottom: 12px;"></div>
+        <div class="sk-line"></div>
+        <div class="sk-line sk-medium"></div>
+        <div class="sk-line sk-short"></div>
+      </div>
+    </div>
+  </div>
+} @else {
+
+<!-- ============================================================ -->
+<!-- MAIN DASHBOARD                                               -->
+<!-- ============================================================ -->
+<div class="dashboard">
+  <div class="dashboard-layout">
+
+    <!-- ===== LEFT: FEED COLUMN ===== -->
+    <div class="feed-col">
+
+      <!-- Welcome Banner -->
+      <div class="welcome-banner">
+        <div class="welcome-text">
+          <h2>{{ greeting() }}, {{ firstName() }}!</h2>
+          <p>Here's what's happening in your communities today.</p>
+          <div class="welcome-date">
+            <i class="bi bi-calendar3"></i>
+            {{ today() | date:'EEEE, d MMMM yyyy' }}
+          </div>
+        </div>
+        <a routerLink="/user/community" class="explore-link">
+          <i class="bi bi-compass"></i> Explore Communities
+        </a>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="stats-row">
+        @for (stat of animatedStats(); track stat.label) {
+          <div class="stat-card">
+            <div class="stat-icon-wrap" [style.background]="stat.bgColor">
+              <i class="bi {{ stat.icon }}" [style.color]="stat.iconColor"></i>
+            </div>
+            <div class="stat-info">
+              <h3 class="stat-value">{{ stat.displayValue }}</h3>
+              <span class="stat-label">{{ stat.label }}</span>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Recent Community Posts -->
+      <div class="dash-card posts-card">
+        <div class="dash-card-header">
+          <div class="header-left">
+            <i class="bi bi-chat-left-text-fill header-icon"></i>
+            <h6 class="header-title">Recent Posts</h6>
+          </div>
+          <a routerLink="/user/community" class="btn-view-all">View All →</a>
+        </div>
+
+        @if (recentPosts().length === 0) {
+          <div class="posts-empty">
+            <div class="empty-illustration">
+              <app-people-connection width="200" height="120"></app-people-connection>
+            </div>
+            <h6>No recent posts yet</h6>
+            <p>Join a community to see posts from your neighbours!</p>
+            <a routerLink="/user/community" class="cta-btn">
+              <i class="bi bi-search"></i> Find Communities
+            </a>
+          </div>
+        } @else {
+          <div class="post-list">
+            @for (post of recentPosts(); track post.id) {
+              <div class="post-item">
+                <div class="post-avatar">
+                  <i class="bi {{ getPostTypeBadge(post.type).icon }}"></i>
+                </div>
+                <div class="post-body">
+                  <div class="post-meta">
+                    <span class="post-badge" [class]="getPostTypeBadge(post.type).class">
+                      {{ getPostTypeBadge(post.type).label }}
+                    </span>
+                    <span class="post-community">{{ post.communityName }}</span>
+                    <span class="post-time">{{ post.timeAgo }}</span>
+                  </div>
+                  <p class="post-content">{{ post.content }}</p>
+                  <div class="post-actions-row">
+                    <span class="post-action"><i class="bi bi-heart"></i> {{ post.likes }}</span>
+                    <span class="post-action"><i class="bi bi-chat"></i> {{ post.comments }}</span>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- ===== RIGHT: SIDEBAR COLUMN ===== -->
+    <aside class="sidebar-col">
+
+      <!-- Profile Completion -->
+      <div class="sidebar-card">
+        <div class="sidebar-card-header">
+          <i class="bi bi-person-check-fill header-ico"></i>
+          <span>Profile Completion</span>
+        </div>
+        <div class="profile-body">
+          <div class="progress-ring-wrapper">
+            <svg class="progress-ring" viewBox="0 0 100 100">
+              <circle class="progress-ring-bg" cx="50" cy="50" r="42" />
+              <circle
+                class="progress-ring-fill"
+                cx="50" cy="50" r="42"
+                [style.stroke-dashoffset]="264 - (264 * profileCompletion() / 100)"
+              />
+            </svg>
+            <div class="progress-ring-text">
+              <span class="pct-value">{{ profileCompletion() }}</span>
+              <span class="pct-symbol">%</span>
+            </div>
+          </div>
+          <div class="profile-strength">{{ profileStrength() }}</div>
+
+          @if (incompleteItems().length > 0) {
+            <ul class="profile-checklist">
+              @for (item of incompleteItems(); track item.label) {
+                <li>
+                  <i class="bi bi-circle"></i>
+                  <span>{{ item.label }}</span>
+                  <a [routerLink]="item.route"><i class="bi bi-arrow-right-short"></i></a>
+                </li>
+              }
+            </ul>
+          } @else {
+            <div class="profile-complete-msg">
+              <i class="bi bi-patch-check-fill"></i>
+              <p>Your profile is complete!</p>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Notifications -->
+      <div class="sidebar-card">
+        <div class="notif-header-row">
+          <i class="bi bi-bell-fill header-ico"></i>
+          <span class="header-title">Notifications</span>
+          @if (notificationService.unreadCount() > 0) {
+            <span class="unread-badge">{{ notificationService.unreadCount() }}</span>
+          }
+          @if (latestNotifications().length > 0) {
+            <button class="btn-mark-read" (click)="markAllNotificationsRead()">
+              <i class="bi bi-check2-all"></i> Read all
+            </button>
+          }
+        </div>
+
+        @if (latestNotifications().length === 0) {
+          <div class="notif-empty">
+            <i class="bi bi-bell-slash"></i>
+            <p>You're all caught up!</p>
+            <span>No new notifications</span>
+          </div>
+        } @else {
+          <div class="notification-list">
+            @for (notif of latestNotifications(); track notif.id) {
+              <div
+                class="notification-item"
+                [class.unread]="!notif.isRead"
+                (click)="markNotificationRead(notif.id)"
+              >
+                <div class="notif-icon" [style.color]="getNotificationIconColor(notif.type)">
+                  <i class="bi {{ getNotificationIcon(notif.type) }}"></i>
+                </div>
+                <div class="notif-content">
+                  <p class="notif-message">{{ notif.message }}</p>
+                  <span class="notif-time">
+                    <i class="bi bi-clock"></i> {{ getTimeAgo(notif.createdAt) }}
+                  </span>
+                </div>
+                @if (!notif.isRead) {
+                  <div class="unread-dot"></div>
+                }
+              </div>
+            }
+          </div>
+          <a routerLink="/user/notifications" class="see-all-link">View all notifications →</a>
+        }
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="sidebar-card">
+        <div class="sidebar-card-header">
+          <i class="bi bi-lightning-fill header-ico"></i>
+          <span>Quick Actions</span>
+        </div>
+        <div class="quick-actions-grid">
+          @for (link of quickLinks(); track link.title) {
+            <a [routerLink]="link.route" class="qa-item">
+              <div class="qa-icon" [style.background]="link.bgColor">
+                <i class="bi {{ link.icon }}" [style.color]="link.color"></i>
+              </div>
+              <div class="qa-info">
+                <strong>{{ link.title }}</strong>
+                <span>{{ link.description }}</span>
+              </div>
+            </a>
+          }
+        </div>
+      </div>
+
+    </aside>
+  </div>
+</div>
+
+}
