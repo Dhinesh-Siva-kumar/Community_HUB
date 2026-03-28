@@ -1,3 +1,6 @@
+@use '../../../../assets/styles/variables' as *;
+@use '../../../../assets/styles/breakpoints' as *;
+
 // ===========================
 // Admin Dashboard Styles
 // ===========================
@@ -28,7 +31,7 @@
 
   h3 {
     font-size: 1.5rem;
-    color: #1e293b;
+    color: $slate-800;
   }
 }
 
@@ -41,7 +44,7 @@
     transition: background-color 0.2s ease;
 
     &:hover {
-      background-color: #f8fafc;
+      background-color: $slate-50;
     }
 
     &:last-child {
@@ -68,11 +71,11 @@
 .quick-action-card {
   .d-flex {
     transition: all 0.2s ease;
-    border-color: #e2e8f0 !important;
+    border-color: $slate-200 !important;
 
     &:hover {
-      background-color: #f8fafc;
-      border-color: #cbd5e1 !important;
+      background-color: $slate-50;
+      border-color: $slate-300 !important;
       transform: translateX(4px);
     }
   }
@@ -98,8 +101,8 @@
     0deg,
     transparent,
     transparent 30px,
-    #f1f5f9 30px,
-    #f1f5f9 31px
+    $slate-100 30px,
+    $slate-100 31px
   );
   border-radius: 12px;
   min-height: 200px;
@@ -125,13 +128,13 @@
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
+    background: $slate-300;
     border-radius: 4px;
   }
 }
 
 // Responsive
-@media (max-width: 575.98px) {
+@include media-sm-max {
   .stat-card {
     .card-body {
       padding: 0.75rem !important;

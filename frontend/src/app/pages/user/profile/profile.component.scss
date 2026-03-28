@@ -1,3 +1,6 @@
+@use '../../../../assets/styles/variables' as *;
+@use '../../../../assets/styles/breakpoints' as *;
+
 // ===========================
 // User Profile Styles
 // ===========================
@@ -8,7 +11,7 @@
   height: 90px;
   border-radius: 50%;
   overflow: hidden;
-  border: 3px solid #eef2ff;
+  border: 3px solid $indigo-50;
 
   .avatar-img {
     width: 100%;
@@ -19,8 +22,8 @@
   .avatar-placeholder {
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: #fff;
+    background: linear-gradient(135deg, $purple-gradient-start 0%, $purple-gradient-end 100%);
+    color: $white;
     font-size: 1.5rem;
   }
 }
@@ -32,18 +35,18 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background-color: #4f46e5;
-  color: #fff;
+  background-color: $indigo-600;
+  color: $white;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid #fff;
+  border: 2px solid $white;
   cursor: pointer;
   font-size: 0.8rem;
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: #4338ca;
+    background-color: $indigo-700;
   }
 }
 
@@ -51,20 +54,20 @@
 .nav-pills {
   .nav-link {
     border-radius: 10px;
-    color: #64748b;
+    color: $slate-500;
     font-size: 0.875rem;
     font-weight: 500;
     padding: 0.5rem 1rem;
     transition: all 0.2s;
 
     &:hover {
-      background-color: #f1f5f9;
-      color: #1e293b;
+      background-color: $slate-100;
+      color: $slate-800;
     }
 
     &.active {
-      background-color: #4f46e5;
-      color: #fff;
+      background-color: $indigo-600;
+      color: $white;
     }
   }
 }
@@ -81,7 +84,7 @@
 // Progress bar
 .progress {
   border-radius: 10px;
-  background-color: #f1f5f9;
+  background-color: $slate-100;
 }
 
 // Interest badges
@@ -92,12 +95,12 @@
 
 // Form readonly styling
 .form-control[readonly] {
-  background-color: #f8fafc;
-  border-color: #e2e8f0;
+  background-color: $slate-50;
+  border-color: $slate-200;
 }
 
 // Responsive
-@media (max-width: 575.98px) {
+@include media-sm-max {
   .avatar-wrapper {
     width: 70px;
     height: 70px;

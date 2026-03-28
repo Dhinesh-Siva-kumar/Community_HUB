@@ -1,3 +1,6 @@
+@use '../../../../assets/styles/variables' as *;
+@use '../../../../assets/styles/breakpoints' as *;
+
 // ===========================
 // Admin Events Styles
 // ===========================
@@ -28,7 +31,7 @@
 
   h3 {
     font-size: 1.5rem;
-    color: #1e293b;
+    color: $slate-800;
   }
 }
 
@@ -43,13 +46,13 @@
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
 
     h6 {
-      color: #d97706 !important;
+      color: $amber-700 !important;
     }
   }
 
   .event-img-wrapper {
     overflow: hidden;
-    background-color: #f1f5f9;
+    background-color: $slate-100;
 
     .event-img {
       width: 100%;
@@ -64,7 +67,7 @@
     }
 
     .event-img-placeholder {
-      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      background: linear-gradient(135deg, $amber-500 0%, $amber-700 100%);
       min-height: 140px;
 
       i {
@@ -81,7 +84,7 @@
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background-color: #fffbeb;
+    background-color: $amber-50;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -89,7 +92,7 @@
 
     i {
       font-size: 2rem;
-      color: #d97706;
+      color: $amber-700;
     }
   }
 }
@@ -115,17 +118,17 @@
     border-radius: 8px !important;
     margin: 0 2px;
     border: none;
-    color: #64748b;
+    color: $slate-500;
     padding: 0.4rem 0.75rem;
 
     &:hover {
-      background-color: #fffbeb;
-      color: #d97706;
+      background-color: $amber-50;
+      color: $amber-700;
     }
   }
 
   .page-item.active .page-link {
-    background-color: #d97706;
+    background-color: $amber-700;
     color: #fff;
   }
 
@@ -142,7 +145,7 @@
   border-radius: 14px;
 }
 
-@media (max-width: 575.98px) {
+@include media-sm-max {
   .stat-card h3 {
     font-size: 1.25rem;
   }

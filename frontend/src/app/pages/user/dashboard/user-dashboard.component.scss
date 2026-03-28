@@ -1,25 +1,13 @@
+@use '../../../../assets/styles/variables' as *;
+@use '../../../../assets/styles/breakpoints' as *;
+
 // ============================================================
 // User Dashboard — Round 2: Previous Project Design Language
 // ============================================================
 // Design tokens aligned with Community_Application project
 
-// ---- Design Tokens ----
-$primary:       #5865f2;
-$primary-light: #ede9fe;
-$primary-dark:  #4752c4;
-$accent:        #eb459e;
-$dark:          #0f0f1a;
-$text:          #374151;
-$muted:         #9ca3af;
-$border:        #e5e7eb;
-$bg:            #f4f5ff;
-$white:         #ffffff;
-$success:       #22c55e;
-$danger:        #ef4444;
-$warning:       #f97316;
 $radius:        16px;
 $transition:    0.2s ease;
-$shimmer-gradient: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
 
 // ============================================================
 // SHIMMER SKELETON LOADER
@@ -36,8 +24,8 @@ $shimmer-gradient: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%)
   grid-template-columns: 1fr 320px;
   gap: 24px;
 
-  @media (max-width: 1024px) { grid-template-columns: 1fr 280px; gap: 16px; }
-  @media (max-width: 768px)  { grid-template-columns: 1fr; }
+  @include media-lg { grid-template-columns: 1fr 280px; gap: 16px; }
+  @include media-md { grid-template-columns: 1fr; }
 }
 
 .sk-feed, .sk-sidebar {
@@ -136,12 +124,12 @@ $shimmer-gradient: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%)
   gap: 24px;
   align-items: start;
 
-  @media (max-width: 1024px) {
+  @include media-lg {
     grid-template-columns: 1fr 280px;
     gap: 16px;
   }
 
-  @media (max-width: 768px) {
+  @include media-md {
     grid-template-columns: 1fr;
   }
 }
@@ -160,7 +148,7 @@ $shimmer-gradient: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%)
   position: sticky;
   top: 88px;
 
-  @media (max-width: 768px) {
+  @include media-md {
     position: static;
   }
 }
@@ -221,7 +209,7 @@ $shimmer-gradient: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%)
     &:hover { background: rgba(255, 255, 255, 0.28); }
   }
 
-  @media (max-width: 480px) {
+  @include media-xs {
     flex-direction: column;
     align-items: flex-start;
     padding: 16px;
@@ -237,10 +225,10 @@ $shimmer-gradient: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%)
   display: flex;
   gap: 12px;
 
-  @media (max-width: 768px) {
+  @include media-md {
     flex-wrap: wrap;
   }
-  @media (max-width: 480px) {
+  @include media-xs {
     gap: 8px;
   }
 }
@@ -299,10 +287,10 @@ $shimmer-gradient: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%)
     text-overflow: ellipsis;
   }
 
-  @media (max-width: 768px) {
+  @include media-md {
     flex: 0 0 calc(50% - 6px);
   }
-  @media (max-width: 480px) {
+  @include media-xs {
     flex: 0 0 calc(50% - 4px);
     padding: 10px 12px;
     gap: 8px;
@@ -341,7 +329,7 @@ $shimmer-gradient: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%)
   justify-content: space-between;
   gap: 8px;
   padding: 14px 16px 10px;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid $hover-bg-light;
 
   .header-left {
     display: flex;
@@ -385,7 +373,7 @@ $shimmer-gradient: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%)
 
     &::-webkit-scrollbar { width: 4px; }
     &::-webkit-scrollbar-track { background: transparent; }
-    &::-webkit-scrollbar-thumb { background: #d0d0d0; border-radius: 3px; }
+    &::-webkit-scrollbar-thumb { background: $scrollbar-thumb-bg; border-radius: 3px; }
   }
 }
 
@@ -396,7 +384,7 @@ $shimmer-gradient: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%)
   padding: 14px 16px;
   color: $text;
   transition: background 0.15s;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid $hover-bg-light;
 
   &:last-child { border-bottom: none; }
   &:hover { background: $bg; }
@@ -407,7 +395,7 @@ $shimmer-gradient: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%)
   height: 40px;
   border-radius: 50%;
   background: linear-gradient(135deg, $primary 0%, $accent 100%);
-  color: #fff;
+  color: $white;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -543,7 +531,7 @@ $shimmer-gradient: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%)
   font-size: 13.5px;
   font-weight: 700;
   color: $dark;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid $hover-bg-light;
 
   i.header-ico { font-size: 16px; color: $primary; }
 }
@@ -624,7 +612,7 @@ $shimmer-gradient: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%)
     align-items: center;
     gap: 8px;
     padding: 6px 0;
-    border-bottom: 1px solid #f3f4f6;
+    border-bottom: 1px solid $hover-bg-light;
     font-size: 12px;
     color: $text;
 
@@ -663,7 +651,7 @@ $shimmer-gradient: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%)
   align-items: center;
   gap: 8px;
   padding: 14px 16px 10px;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid $hover-bg-light;
 
   i.header-ico { font-size: 16px; color: $primary; flex-shrink: 0; }
 
@@ -706,7 +694,7 @@ $shimmer-gradient: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%)
 
   &::-webkit-scrollbar { width: 4px; }
   &::-webkit-scrollbar-track { background: transparent; }
-  &::-webkit-scrollbar-thumb { background: #d0d0d0; border-radius: 3px; }
+  &::-webkit-scrollbar-thumb { background: $scrollbar-thumb-bg; border-radius: 3px; }
 }
 
 .notification-item {
@@ -714,13 +702,13 @@ $shimmer-gradient: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%)
   align-items: flex-start;
   gap: 10px;
   padding: 10px 16px;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid $hover-bg-light;
   cursor: pointer;
   transition: background 0.15s;
 
   &:last-child { border-bottom: none; }
   &:hover { background: $bg; }
-  &.unread { background: #fafaff; }
+  &.unread { background: $bg-muted; }
 
   .notif-icon {
     width: 30px;
@@ -791,7 +779,7 @@ $shimmer-gradient: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%)
   font-weight: 600;
   color: $primary;
   text-decoration: none;
-  border-top: 1px solid #f3f4f6;
+  border-top: 1px solid $hover-bg-light;
 
   &:hover { text-decoration: underline; }
 }
@@ -854,12 +842,12 @@ $shimmer-gradient: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%)
 // ============================================================
 // RESPONSIVE
 // ============================================================
-@media (max-width: 768px) {
+@include media-md {
   .stats-row { gap: 8px; }
   .post-time { display: none; }
 }
 
-@media (max-width: 480px) {
+@include media-xs {
   .notification-list { max-height: 200px; }
 }
 

@@ -1,3 +1,6 @@
+@use '../../../../assets/styles/variables' as *;
+@use '../../../../assets/styles/breakpoints' as *;
+
 // ===========================
 // Post Approval Styles
 // ===========================
@@ -13,7 +16,7 @@
   }
 
   &.selected {
-    border-left-color: #4f46e5 !important;
+    border-left-color: $indigo-600 !important;
     background-color: #fafafe;
   }
 
@@ -22,7 +25,7 @@
   }
 
   .post-avatar-placeholder {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, $purple-gradient-start 0%, $purple-gradient-end 100%);
     color: #fff;
   }
 
@@ -30,7 +33,7 @@
     width: 100px;
     height: 70px;
     object-fit: cover;
-    border: 2px solid #f1f5f9;
+    border: 2px solid $slate-100;
   }
 }
 
@@ -40,7 +43,7 @@
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background-color: #ecfdf5;
+    background-color: $emerald-50;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -48,7 +51,7 @@
 
     i {
       font-size: 2rem;
-      color: #059669;
+      color: $emerald-600;
     }
   }
 }
@@ -60,8 +63,8 @@
   cursor: pointer;
 
   &:checked {
-    background-color: #4f46e5;
-    border-color: #4f46e5;
+    background-color: $indigo-600;
+    border-color: $indigo-600;
   }
 }
 
@@ -69,7 +72,7 @@
   border-radius: 14px;
 }
 
-@media (max-width: 575.98px) {
+@include media-sm-max {
   .post-card .post-image {
     width: 80px;
     height: 56px;

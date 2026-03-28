@@ -1,5 +1,8 @@
+@use '../../../../assets/styles/variables' as *;
+@use '../../../../assets/styles/breakpoints' as *;
+
 .auth-page {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  background: linear-gradient(135deg, $dark-secondary 0%, $admin-dark-bg 50%, $admin-dark-accent 100%);
   min-height: 100vh;
 }
 
@@ -13,7 +16,7 @@
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+  background: linear-gradient(135deg, $dark-secondary 0%, $admin-dark-accent 100%);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -24,11 +27,11 @@
 .form-control {
   padding: 0.625rem 0.875rem;
   border-radius: 0.5rem;
-  border: 1px solid #dee2e6;
+  border: 1px solid $gray-300;
   transition: border-color 0.2s, box-shadow 0.2s;
 
   &:focus {
-    border-color: #0f3460;
+    border-color: $admin-dark-accent;
     box-shadow: 0 0 0 0.2rem rgba(15, 52, 96, 0.15);
   }
 }
@@ -36,11 +39,11 @@
 .form-label {
   font-weight: 500;
   font-size: 0.875rem;
-  color: #495057;
+  color: $gray-600;
 }
 
 .btn-admin {
-  background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+  background: linear-gradient(135deg, $dark-secondary 0%, $admin-dark-accent 100%);
   border: none;
   border-radius: 0.5rem;
   font-weight: 600;
@@ -60,9 +63,9 @@
 }
 
 a {
-  color: #0f3460;
+  color: $admin-dark-accent;
 
   &:hover {
-    color: #1a1a2e;
+    color: $dark-secondary;
   }
 }

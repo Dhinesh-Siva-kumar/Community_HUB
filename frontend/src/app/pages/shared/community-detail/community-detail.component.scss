@@ -1,3 +1,6 @@
+@use '../../../../assets/styles/variables' as *;
+@use '../../../../assets/styles/breakpoints' as *;
+
 // ===========================
 // Community Detail Styles (Enhanced)
 // ===========================
@@ -37,7 +40,7 @@
     .banner-placeholder {
       width: 100%;
       height: 100%;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, $purple-gradient-start 0%, $purple-gradient-end 100%);
       position: relative;
 
       .banner-pattern {
@@ -100,7 +103,7 @@
     .avatar-placeholder {
       width: 100%;
       height: 100%;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, $purple-gradient-start 0%, $purple-gradient-end 100%);
 
       i {
         font-size: 2rem;
@@ -135,13 +138,13 @@
 
 // Tab Navigation with slide indicator
 .community-tabs {
-  background-color: #f8f9fa;
+  background-color: $gray-100;
   border-radius: 12px;
   padding: 4px;
 
   .nav-link {
     border-radius: 10px;
-    color: #64748b;
+    color: $slate-500;
     font-weight: 500;
     font-size: 0.875rem;
     padding: 0.5rem 1rem;
@@ -149,13 +152,13 @@
     position: relative;
 
     &:hover {
-      color: #4f46e5;
+      color: $indigo-600;
       background-color: rgba(79, 70, 229, 0.05);
     }
 
     &.active {
       background-color: #fff;
-      color: #4f46e5;
+      color: $indigo-600;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
       transform: translateY(-1px);
     }
@@ -194,10 +197,10 @@
   textarea {
     border-radius: 12px;
     resize: none;
-    border-color: #e2e8f0;
+    border-color: $slate-200;
 
     &:focus {
-      border-color: #4f46e5;
+      border-color: $indigo-600;
       box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.1);
     }
   }
@@ -225,7 +228,7 @@
     transition: all 0.2s ease;
 
     &:hover {
-      background-color: #eef2ff;
+      background-color: $indigo-50;
     }
   }
 
@@ -361,7 +364,7 @@
   .avatar-initials {
     width: 40px;
     height: 40px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, $purple-gradient-start 0%, $purple-gradient-end 100%);
     color: #fff;
     font-size: 0.8rem;
     font-weight: 600;
@@ -382,7 +385,7 @@
 .avatar-initials {
   width: 40px;
   height: 40px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, $purple-gradient-start 0%, $purple-gradient-end 100%);
   color: #fff;
   font-size: 0.8rem;
   font-weight: 600;
@@ -391,7 +394,7 @@
 .avatar-initials-sm {
   width: 30px;
   height: 30px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, $purple-gradient-start 0%, $purple-gradient-end 100%);
   color: #fff;
   font-size: 0.65rem;
   font-weight: 600;
@@ -411,7 +414,7 @@
 // Comments
 .comments-section {
   .comment-bubble {
-    background-color: #f1f5f9;
+    background-color: $slate-100;
     border-radius: 12px;
   }
 
@@ -420,7 +423,7 @@
     font-size: 0.8rem;
 
     &:focus {
-      border-color: #4f46e5;
+      border-color: $indigo-600;
       box-shadow: none;
     }
   }
@@ -448,14 +451,14 @@
   height: 40px;
   min-width: 40px;
   border-radius: 10px;
-  background-color: #eef2ff;
+  background-color: $indigo-50;
   display: flex;
   align-items: center;
   justify-content: center;
 
   i {
     font-size: 1.1rem;
-    color: #4f46e5;
+    color: $indigo-600;
   }
 }
 
@@ -468,7 +471,7 @@
     transition: background-color 0.2s ease;
 
     &:hover {
-      background-color: #f8fafc;
+      background-color: $slate-50;
     }
 
     &:last-child {
@@ -485,7 +488,7 @@
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
+    background: $slate-300;
     border-radius: 4px;
   }
 }
@@ -513,7 +516,7 @@
     width: 70px;
     height: 70px;
     border-radius: 50%;
-    background-color: #eef2ff;
+    background-color: $indigo-50;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -521,14 +524,14 @@
 
     i {
       font-size: 1.75rem;
-      color: #4f46e5;
+      color: $indigo-600;
     }
 
     &.emergency-icon {
-      background-color: #fef2f2;
+      background-color: $error-bg;
 
       i {
-        color: #dc2626;
+        color: $error;
       }
     }
   }
@@ -539,7 +542,7 @@
   border-radius: 10px;
 
   &:focus {
-    border-color: #4f46e5;
+    border-color: $indigo-600;
     box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.1);
   }
 }
@@ -554,7 +557,7 @@
 }
 
 // Responsive
-@media (max-width: 767.98px) {
+@include media-md-max {
   .community-header {
     .header-banner {
       height: 150px;
@@ -582,7 +585,7 @@
   }
 }
 
-@media (max-width: 575.98px) {
+@include media-sm-max {
   .community-header {
     .header-banner {
       height: 120px;

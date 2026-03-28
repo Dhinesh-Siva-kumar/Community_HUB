@@ -1,3 +1,6 @@
+@use '../../../../assets/styles/variables' as *;
+@use '../../../../assets/styles/breakpoints' as *;
+
 // ===========================
 // User Jobs Styles
 // ===========================
@@ -13,7 +16,7 @@
 
   .job-thumb {
     object-fit: cover;
-    border: 2px solid #f1f5f9;
+    border: 2px solid $slate-100;
   }
 }
 
@@ -23,7 +26,7 @@
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background-color: #fef2f2;
+    background-color: $error-bg;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -31,7 +34,7 @@
 
     i {
       font-size: 2rem;
-      color: #dc2626;
+      color: $error;
     }
   }
 }
@@ -61,18 +64,18 @@
     border-radius: 8px !important;
     margin: 0 2px;
     border: none;
-    color: #64748b;
+    color: $slate-500;
     padding: 0.4rem 0.75rem;
 
     &:hover {
-      background-color: #fef2f2;
-      color: #dc2626;
+      background-color: $error-bg;
+      color: $error;
     }
   }
 
   .page-item.active .page-link {
-    background-color: #dc2626;
-    color: #fff;
+    background-color: $error;
+    color: $white;
   }
 
   .page-item.disabled .page-link {

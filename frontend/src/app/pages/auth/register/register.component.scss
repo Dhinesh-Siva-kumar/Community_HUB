@@ -1,23 +1,9 @@
+@use '../../../../assets/styles/variables' as *;
+@use '../../../../assets/styles/breakpoints' as *;
+
 // ===========================
 // Register Page — Discord-inspired Split Layout with Multi-Step Wizard
-// Design tokens inline (no shared _variables import)
 // ===========================
-
-// ---- Design Tokens ----
-$primary: #5865f2;
-$primary-dark: #4752c4;
-$accent: #eb459e;
-$dark: #0f0f1a;
-$text-body: #374151;
-$text-muted: #9ca3af;
-$border: #e5e7eb;
-$bg: #f4f5ff;
-$white: #ffffff;
-$error: #ef4444;
-$success: #22c55e;
-
-// Breakpoint for hiding branding panel
-$breakpoint-sidebar: 991.98px;
 
 // ============================================================
 // PAGE
@@ -41,7 +27,7 @@ $breakpoint-sidebar: 991.98px;
 .auth-branding {
   position: relative;
   flex: 0 0 42%;
-  background: linear-gradient(145deg, $primary 0%, #7c3aed 50%, $accent 100%);
+  background: linear-gradient(145deg, $primary 0%, $violet 50%, $accent 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -49,7 +35,7 @@ $breakpoint-sidebar: 991.98px;
   overflow: hidden;
   color: $white;
 
-  @media (max-width: $breakpoint-sidebar) {
+  @include media-lg-max {
     display: none;
   }
 }
@@ -214,10 +200,10 @@ $breakpoint-sidebar: 991.98px;
       margin-left: -10px;
 
       &:first-child { margin-left: 0; }
-      &.av-1 { background: #7c3aed; }
+      &.av-1 { background: $violet; }
       &.av-2 { background: #2563eb; }
-      &.av-3 { background: #059669; }
-      &.av-4 { background: #d97706; }
+      &.av-3 { background: $emerald-600; }
+      &.av-4 { background: $amber-700; }
     }
   }
 
@@ -240,7 +226,7 @@ $breakpoint-sidebar: 991.98px;
   background: $white;
   overflow-y: auto;
 
-  @media (max-width: 575.98px) {
+  @include media-sm-max {
     padding: 32px 20px;
   }
 }
@@ -269,7 +255,7 @@ $breakpoint-sidebar: 991.98px;
     color: $primary;
   }
 
-  @media (max-width: $breakpoint-sidebar) {
+  @include media-lg-max {
     display: flex;
   }
 }
@@ -290,7 +276,7 @@ $breakpoint-sidebar: 991.98px;
 
     .subtitle {
       font-size: 14px;
-      color: $text-muted;
+      color: $muted;
       margin: 0;
     }
   }
@@ -317,8 +303,8 @@ $breakpoint-sidebar: 991.98px;
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    background: #f0f1f5;
-    color: $text-muted;
+    background: $gray-200;
+    color: $muted;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -334,7 +320,7 @@ $breakpoint-sidebar: 991.98px;
 
   .step-label {
     font-size: 11px;
-    color: $text-muted;
+    color: $muted;
     white-space: nowrap;
     font-weight: 600;
     transition: color 0.3s ease;
@@ -398,7 +384,7 @@ $breakpoint-sidebar: 991.98px;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
 
-  @media (max-width: 575.98px) {
+  @include media-sm-max {
     grid-template-columns: 1fr;
   }
 }
@@ -424,7 +410,7 @@ $breakpoint-sidebar: 991.98px;
     position: absolute;
     left: 14px;
     font-size: 16px;
-    color: $text-muted;
+    color: $muted;
     pointer-events: none;
     line-height: 1;
   }
@@ -437,12 +423,12 @@ $breakpoint-sidebar: 991.98px;
     border-radius: 10px;
     font-size: 14px;
     color: $dark;
-    background: #fafafa;
+    background: $bg-neutral;
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
 
     &::placeholder {
-      color: #c4c8d4;
+      color: $gray-400;
     }
 
     &:focus {
@@ -452,10 +438,10 @@ $breakpoint-sidebar: 991.98px;
     }
 
     &.is-invalid {
-      border-color: $error;
+      border-color: $danger;
 
       &:focus {
-        box-shadow: 0 0 0 3px rgba($error, 0.1);
+        box-shadow: 0 0 0 3px rgba($danger, 0.1);
       }
     }
   }
@@ -478,7 +464,7 @@ $breakpoint-sidebar: 991.98px;
     padding: 4px;
     display: flex;
     align-items: center;
-    color: $text-muted;
+    color: $muted;
     transition: color 0.2s;
 
     &:hover {
@@ -494,7 +480,7 @@ $breakpoint-sidebar: 991.98px;
 
 .field-error {
   font-size: 12px;
-  color: $error;
+  color: $danger;
   font-weight: 500;
   margin-top: 2px;
 }
@@ -601,8 +587,8 @@ $breakpoint-sidebar: 991.98px;
   transition: border-color 0.2s, background 0.2s;
 
   &:hover {
-    border-color: #c7cdd9;
-    background: #f9fafb;
+    border-color: $gray-700;
+    background: $gray-50;
   }
 }
 
@@ -618,7 +604,7 @@ $breakpoint-sidebar: 991.98px;
 .switch-auth {
   text-align: center;
   font-size: 13.5px;
-  color: $text-muted;
+  color: $muted;
   margin: 24px 0 0;
 
   .switch-link {
@@ -636,7 +622,7 @@ $breakpoint-sidebar: 991.98px;
 // ============================================================
 // RESPONSIVE
 // ============================================================
-@media (max-width: $breakpoint-sidebar) {
+@include media-lg-max {
   .auth-form-wrapper {
     background: $bg;
   }
@@ -649,7 +635,7 @@ $breakpoint-sidebar: 991.98px;
   }
 }
 
-@media (max-width: 575.98px) {
+@include media-sm-max {
   .auth-card {
     padding: 24px 20px;
   }

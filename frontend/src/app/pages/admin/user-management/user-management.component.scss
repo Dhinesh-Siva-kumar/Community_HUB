@@ -1,3 +1,6 @@
+@use '../../../../assets/styles/variables' as *;
+@use '../../../../assets/styles/breakpoints' as *;
+
 // ===========================
 // User Management Styles
 // ===========================
@@ -28,7 +31,7 @@
 
   h3 {
     font-size: 1.4rem;
-    color: #1e293b;
+    color: $slate-800;
   }
 }
 
@@ -36,15 +39,15 @@
 .search-group {
   .input-group-text {
     border-radius: 10px 0 0 10px;
-    border-color: #dee2e6;
+    border-color: $gray-300;
   }
 
   .form-control {
     border-radius: 0 10px 10px 0;
-    border-color: #dee2e6;
+    border-color: $gray-300;
 
     &:focus {
-      border-color: #4f46e5;
+      border-color: $indigo-600;
       box-shadow: none;
     }
   }
@@ -56,7 +59,7 @@
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    color: #64748b;
+    color: $slate-500;
     font-weight: 600;
     padding: 0.75rem;
   }
@@ -70,7 +73,7 @@
     transition: background-color 0.15s;
 
     &:hover {
-      background-color: #f8fafc;
+      background-color: $slate-50;
     }
   }
 }
@@ -79,7 +82,7 @@
 .user-avatar-placeholder {
   width: 36px;
   height: 36px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, $purple-gradient-start 0%, $purple-gradient-end 100%);
   color: #fff;
   font-size: 0.7rem;
 }
@@ -90,7 +93,7 @@
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background-color: #eef2ff;
+    background-color: $indigo-50;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -98,7 +101,7 @@
 
     i {
       font-size: 2rem;
-      color: #4f46e5;
+      color: $indigo-600;
     }
   }
 }
@@ -109,17 +112,17 @@
     border-radius: 8px !important;
     margin: 0 2px;
     border: none;
-    color: #64748b;
+    color: $slate-500;
     padding: 0.4rem 0.75rem;
 
     &:hover {
-      background-color: #eef2ff;
-      color: #4f46e5;
+      background-color: $indigo-50;
+      color: $indigo-600;
     }
   }
 
   .page-item.active .page-link {
-    background-color: #4f46e5;
+    background-color: $indigo-600;
     color: #fff;
   }
 
@@ -141,7 +144,7 @@
 }
 
 // Responsive
-@media (max-width: 575.98px) {
+@include media-sm-max {
   .stat-card {
     .card-body {
       padding: 0.75rem !important;

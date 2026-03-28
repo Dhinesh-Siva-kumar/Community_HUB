@@ -1,3 +1,6 @@
+@use '../../../../assets/styles/variables' as *;
+@use '../../../../assets/styles/breakpoints' as *;
+
 .toast-container {
   position: fixed;
   top: 1rem;
@@ -61,19 +64,19 @@
 }
 
 .toast-success {
-  background-color: #198754;
+  background-color: $toast-success;
 }
 
 .toast-error {
-  background-color: #dc3545;
+  background-color: $toast-danger;
 }
 
 .toast-warning {
-  background-color: #fd7e14;
+  background-color: $toast-warning;
 }
 
 .toast-info {
-  background-color: #0d6efd;
+  background-color: $toast-info;
 }
 
 @keyframes slideIn {
