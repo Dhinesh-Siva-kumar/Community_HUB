@@ -38,7 +38,7 @@ export class LoginComponent {
   }
 
   loginForm: FormGroup = this.fb.group({
-    email: ['', [Validators.required, this.usernameOrEmailValidator.bind(this)]],
+    identifier: ['', [Validators.required, this.usernameOrEmailValidator.bind(this)]],
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
 
@@ -49,9 +49,9 @@ export class LoginComponent {
     }
 
     this.loading.set(true);
-    const { email, password } = this.loginForm.value;
+    const { identifier, password } = this.loginForm.value;
 
-    this.authService.login(email, password).subscribe({
+    this.authService.login(identifier, password).subscribe({
       next: () => {
         this.loading.set(false);
         this.toastService.success('Login successful! Welcome back.');

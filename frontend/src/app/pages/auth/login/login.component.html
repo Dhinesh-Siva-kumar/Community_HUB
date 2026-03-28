@@ -78,18 +78,18 @@
               <input
                 id="login-email"
                 type="text"
-                formControlName="email"
+                formControlName="identifier"
                 placeholder="User name or user@gmail.com"
                 autocomplete="username"
                 class="field-input"
-                [class.is-invalid]="f['email'].touched && f['email'].invalid"
+                [class.is-invalid]="f['identifier'].touched && f['identifier'].invalid"
               />
             </div>
-            @if (f['email'].touched && f['email'].invalid) {
+            @if (f['identifier'].touched && f['identifier'].invalid) {
               <div class="field-error">
-                @if (f['email'].errors?.['required']) {
+                @if (f['identifier'].errors?.['required']) {
                   Username or email is required.
-                } @else if (f['email'].errors?.['invalidUsernameOrEmail']) {
+                } @else if (f['identifier'].errors?.['invalidUsernameOrEmail']) {
                   Please enter a valid username or email address.
                 }
               </div>
