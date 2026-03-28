@@ -23,7 +23,7 @@ export class AuthService {
   }
 
   login(email: string, password: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.baseUrl}/auth/login`, { email, password }).pipe(
+    return this.http.post<AuthResponse>(`${this.baseUrl}/auth/login`, { user: email, password }).pipe(
       tap((response) => this.handleAuthResponse(response))
     );
   }
@@ -38,6 +38,14 @@ export class AuthService {
     return this.http.post<AuthResponse>(`${this.baseUrl}/auth/admin/login`, { email, password }).pipe(
       tap((response) => this.handleAuthResponse(response))
     );
+  }
+
+  forgotPassword(data: { usernameOrEmail: string; phoneNumber: string; oldPassword: string; newPassword: string }): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.baseUrl}/auth/forgot-password`, data);
+  }
+
+  verifyResetOtp(data: { usernameOrEmail: string; phoneNumber: string; otp: string; newPassword: string }): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.baseUrl}/auth/reset-password/verify`, data);
   }
 
   logout(): void {

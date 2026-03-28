@@ -72,15 +72,15 @@
 
           <!-- Email -->
           <div class="field-group">
-            <label class="field-label" for="login-email">Email address</label>
+            <label class="field-label" for="login-email">User Name</label>
             <div class="field-input-wrap">
-              <i class="bi bi-envelope field-icon"></i>
+              <i class="bi bi-person field-icon"></i>
               <input
                 id="login-email"
-                type="email"
+                type="text"
                 formControlName="email"
-                placeholder="you@example.com"
-                autocomplete="email"
+                placeholder="User name or user@gmail.com"
+                autocomplete="username"
                 class="field-input"
                 [class.is-invalid]="f['email'].touched && f['email'].invalid"
               />
@@ -88,9 +88,9 @@
             @if (f['email'].touched && f['email'].invalid) {
               <div class="field-error">
                 @if (f['email'].errors?.['required']) {
-                  Email is required.
-                } @else if (f['email'].errors?.['email']) {
-                  Please enter a valid email address.
+                  Username or email is required.
+                } @else if (f['email'].errors?.['invalidUsernameOrEmail']) {
+                  Please enter a valid username or email address.
                 }
               </div>
             }
@@ -131,6 +131,13 @@
             }
           </div>
 
+          <!-- Forgot Password Link -->
+          <div class="forgot-password-link">
+            <button type="button" class="text-link" (click)="forgotPassword()">
+              Forgot password?
+            </button>
+          </div>
+
           <!-- Submit -->
           <button type="submit" class="submit-btn" [disabled]="loading()">
             @if (loading()) {
@@ -166,9 +173,9 @@
           <a routerLink="/auth/register" class="switch-link">Create one free &rarr;</a>
         </p>
 
-        <p class="admin-link">
+        <!-- <p class="admin-link">
           <a routerLink="/auth/admin-login">Admin Login</a>
-        </p>
+        </p> -->
       </div>
     </div>
 

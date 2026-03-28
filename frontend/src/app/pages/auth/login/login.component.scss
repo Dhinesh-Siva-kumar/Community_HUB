@@ -378,6 +378,30 @@ $breakpoint-sidebar: 991.98px;
   margin-top: 2px;
 }
 
+// Forgot password link
+.forgot-password-link {
+  text-align: right;
+  margin-bottom: 16px;
+  margin-top: -8px;
+
+  .text-link {
+    background: none;
+    border: none;
+    color: $primary;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s;
+    padding: 0;
+
+    &:hover {
+      color: $primary-dark;
+      text-decoration: underline;
+    }
+  }
+}
+
 // Submit button
 .submit-btn {
   display: flex;

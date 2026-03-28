@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { RouterLink, Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
@@ -25,8 +25,20 @@ export class LoginComponent {
   loading = signal(false);
   showPassword = signal(false);
 
+  private usernameOrEmailValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    if (!value) return null;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const usernameRegex = /^[a-zA-Z0-9._\-]+$/ ///^[a-zA-Z0-9._\-]{3,}$/;
+    return emailRegex.test(value) || usernameRegex.test(value) ? null : { invalidUsernameOrEmail: true };
+  }
+
+  forgotPassword(): void {
+    this.router.navigate(['/auth/forgot-password']);
+  }
+
   loginForm: FormGroup = this.fb.group({
-    email: ['', [Validators.required, Validators.email]],
+    email: ['', [Validators.required, this.usernameOrEmailValidator.bind(this)]],
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
 

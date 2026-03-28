@@ -49,6 +49,14 @@ export const routes: Routes = [
             (m) => m.AdminLoginComponent
           ),
       },
+      {
+        path: 'auth/forgot-password',
+        canActivate: [guestGuard],
+        loadComponent: () =>
+          import('./pages/auth/forgot-password/forgot-password.component').then(
+            (m) => m.ForgotPasswordComponent
+          ),
+      },
     ],
   },
 
