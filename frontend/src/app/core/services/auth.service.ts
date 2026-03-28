@@ -108,21 +108,39 @@ export class AuthService {
   private handleAuthResponse(response: AuthResponse): void {
     localStorage.setItem(this.ACCESS_TOKEN_KEY, response.accessToken);
     localStorage.setItem(this.REFRESH_TOKEN_KEY, response.refreshToken);
+    localStorage.setItem('auth_user', JSON.stringify(response.user));
     this.currentUser.set(response.user);
     this.isAuthenticated.set(true);
     this.authState$.next(response.user);
   }
 
   private loadStoredAuth(): void {
-    const token = this.getAccessToken();
-    if (token) {
-      this.isAuthenticated.set(true);
-      this.getCurrentUser().pipe(
-        catchError(() => {
-          this.logout();
-          return of(null);
-        })
-      ).subscribe();
+    if (typeof window === 'undefined') return;
+
+    const token = localStorage.getItem(this.ACCESS_TOKEN_KEY);
+    const storedUser = localStorage.getItem('auth_user');
+
+    if (!token) return;
+
+    // Immediately restore from localStorage so UI never sees an empty currentUser on refresh
+    if (storedUser) {
+      try {
+        const user: User = JSON.parse(storedUser);
+        this.currentUser.set(user);
+        this.isAuthenticated.set(true);
+        this.authState$.next(user);
+      } catch {
+        // corrupted stored data — clear it
+        localStorage.removeItem('auth_user');
+      }
     }
+
+    // Validate token with server in background and refresh the user data
+    // this.getCurrentUser().pipe( // need to uncommand once user api is ready
+    //   catchError(() => {
+    //     this.logout();
+    //     return of(null);
+    //   })
+    // ).subscribe();
   }
 }

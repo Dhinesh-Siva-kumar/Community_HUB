@@ -82,7 +82,7 @@ export class UserLayoutComponent {
     const user = this.authService.currentUser();
     if (!user) return 'U';
     return (
-      (user.firstName?.charAt(0) || '') + (user.lastName?.charAt(0) || '')
+      (user.userName?.charAt(0) || '') + (user.lastName?.charAt(0) || '')
     ).toUpperCase() || 'U';
   }
 

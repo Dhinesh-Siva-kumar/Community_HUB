@@ -61,7 +61,7 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
   today = signal(new Date());
 
   profileCompletion = computed(() => this.user()?.profileCompletion ?? 0);
-  firstName = computed(() => this.user()?.firstName ?? 'User');
+  firstName = computed(() => this.user()?.userName ?? 'User');
 
   // Time-based greeting
   greeting = computed(() => {
