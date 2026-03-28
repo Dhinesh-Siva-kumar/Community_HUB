@@ -2,7 +2,7 @@ import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap, catchError, of, switchMap } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { User, AuthResponse } from '../models';
+import { User, AuthResponse, UserRegister } from '../models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -28,10 +28,26 @@ export class AuthService {
     );
   }
 
-  register(userData: Partial<User> & { password: string }): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.baseUrl}/auth/register`, userData).pipe(
-      tap((response) => this.handleAuthResponse(response))
-    );
+  register(userData: UserRegister): Observable<AuthResponse> {
+  return this.http.post<AuthResponse>(`${this.baseUrl}/auth/register`, userData).pipe(
+    tap((response) => this.handleAuthResponse(response))
+  );
+  }
+
+  getCountries() {
+      return this.http.get<any>(`${this.baseUrl}/master-data/countries`);
+  }
+
+  checkUsername(username: string): Observable<any> {
+  return this.http.get(`${this.baseUrl}/auth/check-username/${username}`);
+  }
+
+  sendOtp(data: { mobile: string }): Observable<any> {
+    return this.http.post(`${this.baseUrl}/send-otp`, data);
+  }
+  
+  verifyOtp(data: { mobile: string; otp: string }): Observable<any> {
+    return this.http.post(`${this.baseUrl}/verify-otp`, data);
   }
 
   adminLogin(email: string, password: string): Observable<AuthResponse> {

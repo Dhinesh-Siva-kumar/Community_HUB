@@ -1,3 +1,27 @@
+interface RegisterForm {
+  userName: string;
+  displayName: string;
+  countryCode: string;
+  mobile: string;
+  password: string;
+  confirmPassword: string;
+}
+
+export interface UserRegister {
+  user_name: string;
+  display_name: string;
+  phone_no: string;
+  password: string;
+  country_id: number;
+}
+
+export interface Country {
+  country_id: number;
+  country_name: string;
+  country_code: string;
+  country_flag: string;
+}
+
 export interface User {
   id: string;
   email: string;
