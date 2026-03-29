@@ -56,8 +56,8 @@ export class AuthService {
     );
   }
 
-  forgotPassword(data: { usernameOrEmail: string; phoneNumber: string; oldPassword: string; newPassword: string }): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${this.baseUrl}/auth/forgot-password`, data);
+  forgotPasswordSendOTP(data: { usernameOrEmail: string; phoneNumber: string}): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.baseUrl}/auth/forgot-password/send-otp`, data);
   }
 
   verifyResetOtp(data: { usernameOrEmail: string; phoneNumber: string; otp: string; newPassword: string }): Observable<{ message: string }> {

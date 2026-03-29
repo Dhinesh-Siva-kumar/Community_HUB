@@ -42,7 +42,7 @@ export class ForgotPasswordComponent {
     resetForm: FormGroup = this.fb.group({
         usernameOrEmail: ['', [Validators.required, usernameOrEmailValidator]],
         phoneNumber: ['', [Validators.required, Validators.pattern(/^\+?[0-9]{7,15}$/)]],
-        password: ['', [Validators.required, Validators.minLength(6)]],
+        newPassword: ['', [Validators.required, Validators.minLength(6)]],
         confirmPassword: ['', [Validators.required]],
     },
         { validators: this.passwordMatchValidator }
@@ -53,7 +53,7 @@ export class ForgotPasswordComponent {
     });
 
     passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
-        const password = control.get('password');
+        const password = control.get('newPassword');
         const confirmPassword = control.get('confirmPassword');
         if (password && confirmPassword && password.value !== confirmPassword.value) {
             confirmPassword?.setErrors({ passwordMismatch: true });
@@ -126,25 +126,21 @@ export class ForgotPasswordComponent {
     }
 
     onSendOtp(): void {
-        this.loading.set(false);
-        const phone: string = this.resetForm.value.phoneNumber || '';
-        this.maskedPhone = phone.slice(0, -4).replace(/./g, '*') + phone.slice(-4);
-        this.step.set('otp');
-        this.toastService.success('OTP sent to your phone number.');
-        this.resetForm.disable();
-        return;
         if (this.resetForm.invalid) {
             this.resetForm.markAllAsTouched();
             return;
         }
 
         this.loading.set(true);
-        const { usernameOrEmail, phoneNumber, oldPassword, newPassword } = this.resetForm.value;
-        this.authService.forgotPassword({ usernameOrEmail, phoneNumber, oldPassword, newPassword }).subscribe({
+        const phone: string = this.resetForm.value.phoneNumber || '';
+        this.maskedPhone = phone.slice(0, -4).replace(/./g, '*') + phone.slice(-4);
+        const { usernameOrEmail, phoneNumber } = this.resetForm.value;
+        this.authService.forgotPasswordSendOTP({ usernameOrEmail, phoneNumber }).subscribe({
             next: () => {
                 this.loading.set(false);
                 this.step.set('otp');
                 this.toastService.success('OTP sent to your phone number.');
+                this.resetForm.disable();
             },
             error: (err) => {
                 this.loading.set(false);
