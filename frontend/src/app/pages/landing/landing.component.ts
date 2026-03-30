@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject, PLATFORM_ID, AfterViewInit, ElementRef, QueryList, ViewChildren, HostListener } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -10,24 +10,50 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.scss']
 })
-export class LandingComponent implements OnInit, OnDestroy {
-  constructor(@Inject(PLATFORM_ID) private platformId: object) {}
+export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: object,
+    private el: ElementRef
+  ) {}
 
-  private observer!: IntersectionObserver;
+  private sectionObserver!: IntersectionObserver;
+  private scrollObserver!: IntersectionObserver;
   private readonly sectionIds = ['home', 'features', 'communities', 'about-us', 'how-it-works', 'contact'];
+
+  // Counter animation
+  counterValues: { [key: string]: number } = {};
+  countersAnimated = false;
+
+  // Navbar
+  navbarScrolled = false;
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      this.setupIntersectionObserver();
+      this.setupSectionObserver();
+    }
+  }
+
+  ngAfterViewInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.setupScrollAnimations();
+      this.setupCounterObserver();
     }
   }
 
   ngOnDestroy(): void {
-    this.observer?.disconnect();
+    this.sectionObserver?.disconnect();
+    this.scrollObserver?.disconnect();
   }
 
-  private setupIntersectionObserver(): void {
-    this.observer = new IntersectionObserver(
+  @HostListener('window:scroll')
+  onWindowScroll(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.navbarScrolled = window.scrollY > 50;
+    }
+  }
+
+  private setupSectionObserver(): void {
+    this.sectionObserver = new IntersectionObserver(
       (entries) => {
         const visible = entries
           .filter(e => e.isIntersecting)
@@ -36,16 +62,78 @@ export class LandingComponent implements OnInit, OnDestroy {
           this.activeSection = visible[0].target.id;
         }
       },
-      {
-        threshold: [0.2, 0.5],
-        rootMargin: '-80px 0px -30% 0px'
-      }
+      { threshold: [0.2, 0.5], rootMargin: '-80px 0px -30% 0px' }
     );
 
     this.sectionIds.forEach(id => {
       const el = document.getElementById(id);
-      if (el) this.observer.observe(el);
+      if (el) this.sectionObserver.observe(el);
     });
+  }
+
+  private setupScrollAnimations(): void {
+    this.scrollObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            this.scrollObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -60px 0px' }
+    );
+
+    const animatedElements = this.el.nativeElement.querySelectorAll('.animate-on-scroll');
+    animatedElements.forEach((el: Element) => {
+      this.scrollObserver.observe(el);
+    });
+  }
+
+  private setupCounterObserver(): void {
+    const statsSection = this.el.nativeElement.querySelector('.lp-hero-stats');
+    if (!statsSection) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !this.countersAnimated) {
+            this.countersAnimated = true;
+            this.animateCounters();
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    observer.observe(statsSection);
+  }
+
+  private animateCounters(): void {
+    const targets = [
+      { key: 'members', target: 10, suffix: 'K+' },
+      { key: 'communities', target: 15, suffix: 'K+' },
+      { key: 'posts', target: 2, suffix: 'M+' }
+    ];
+
+    targets.forEach(item => {
+      let current = 0;
+      const increment = item.target / 40;
+      const timer = setInterval(() => {
+        current += increment;
+        if (current >= item.target) {
+          current = item.target;
+          clearInterval(timer);
+        }
+        this.counterValues[item.key] = Math.floor(current);
+      }, 40);
+    });
+  }
+
+  getCounterDisplay(key: string, suffix: string): string {
+    const val = this.counterValues[key];
+    return val !== undefined ? `${val}${suffix}` : `0${suffix}`;
   }
 
   applicationName = 'Community';
@@ -54,25 +142,29 @@ export class LandingComponent implements OnInit, OnDestroy {
       icon: 'bi-people-fill',
       title: 'Join Communities',
       description: 'Discover and join thousands of communities that match your passions, hobbies, and professional interests.',
-      color: 'feature-purple'
+      color: 'feature-purple',
+      gradient: 'gradient-purple'
     },
     {
       icon: 'bi-chat-dots-fill',
-      title: 'Share Posts & Discussions',
+      title: 'Share & Discuss',
       description: 'Start conversations, share ideas, post articles, and engage in meaningful discussions with community members.',
-      color: 'feature-blue'
+      color: 'feature-cyan',
+      gradient: 'gradient-cyan'
     },
     {
       icon: 'bi-heart-fill',
-      title: 'Meet Like-Minded People',
+      title: 'Meet Your People',
       description: 'Connect with people who share your interests and build lasting relationships across the globe.',
-      color: 'feature-pink'
+      color: 'feature-pink',
+      gradient: 'gradient-pink'
     },
     {
       icon: 'bi-bell-fill',
-      title: 'Real-Time Notifications',
+      title: 'Stay Updated',
       description: 'Stay up to date with instant notifications for replies, mentions, community updates, and new connections.',
-      color: 'feature-green'
+      color: 'feature-green',
+      gradient: 'gradient-green'
     }
   ];
 
@@ -83,15 +175,17 @@ export class LandingComponent implements OnInit, OnDestroy {
       description: 'Connect with founders, investors, and business leaders to share insights and grow your ventures.',
       members: '45K',
       color: 'community-orange',
-      badge: 'Business'
+      badge: 'Business',
+      gradient: 'card-gradient-orange'
     },
     {
       icon: 'bi-heart-pulse-fill',
       name: 'Health & Fitness',
-      description: 'Connect with people who want to stay healthy, share workout routines, fitness tips, and motivate each other to live better.',
+      description: 'Share workout routines, fitness tips, and motivate each other to live better.',
       members: '128K',
       color: 'community-purple',
-      badge: 'Wellness'
+      badge: 'Wellness',
+      gradient: 'card-gradient-purple'
     },
     {
       icon: 'bi-cup-hot',
@@ -99,15 +193,17 @@ export class LandingComponent implements OnInit, OnDestroy {
       description: 'Share recipes, cooking tips, and culinary experiences with fellow food enthusiasts.',
       members: '64K',
       color: 'community-pink',
-      badge: 'Recipes'
+      badge: 'Recipes',
+      gradient: 'card-gradient-pink'
     },
     {
       icon: 'bi-geo-alt-fill',
       name: 'Travel',
-      description: 'Explore new destinations, share travel experiences, and connect with fellow travelers around the world.',
+      description: 'Explore new destinations, share experiences, and connect with fellow travelers worldwide.',
       members: '210K',
       color: 'community-blue',
-      badge: 'Adventures'
+      badge: 'Adventures',
+      gradient: 'card-gradient-blue'
     }
   ];
 
@@ -141,19 +237,19 @@ export class LandingComponent implements OnInit, OnDestroy {
 
   steps = [
     {
-      number: '1',
+      number: '01',
       icon: 'bi-person-plus-fill',
       title: 'Create an Account',
       description: "Sign up for free in seconds. No credit card required. Just your email and you're in!"
     },
     {
-      number: '2',
+      number: '02',
       icon: 'bi-compass-fill',
       title: 'Join Communities',
       description: 'Browse and join communities that match your interests, profession, or hobbies.'
     },
     {
-      number: '3',
+      number: '03',
       icon: 'bi-send-fill',
       title: 'Share & Interact',
       description: 'Post content, comment on discussions, and engage with members who share your passion.'
