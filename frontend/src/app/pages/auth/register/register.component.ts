@@ -197,10 +197,6 @@ loadCountries() {
   }
 
  onSubmit(): void {
-  // ✅ move to OTP step
-      this.step.set('otp');
-      this.registerForm.disable();
-      return;
   if (this.registerForm.invalid) {
     this.registerForm.markAllAsTouched();
     return;
