@@ -67,8 +67,7 @@
               <span class="brand-headline-sub">Verify your identity.</span>
             </h1>
             <p class="brand-desc">
-              Enter the OTP we sent to your phone number to confirm your
-              password reset.
+              Enter the OTP we sent to your phone number to confirm your identity.
             </p>
           </div>
 
@@ -341,8 +340,13 @@
           @if (step() === "otp") {
             <form [formGroup]="otpForm" (ngSubmit)="verifyOtp()">
               <div class="otp-group">
+                <div class="otp-icon-wrap">
+                  <div class="otp-shield-icon">
+                    <i class="bi bi-shield-lock-fill"></i>
+                  </div>
+                  <p class="otp-hint">Enter the 6-digit code sent to your phone</p>
+                </div>
                 <div class="otp-field-group">
-                  <label class="field-label">One-Time Password</label>
                   <div class="otp-boxes" [class.otp-error]="otpError()">
                     @for (digit of otpDigits; track $index) {
                       <input
@@ -366,15 +370,19 @@
                       <i class="bi bi-x-circle-fill"></i>
                       OTP is incorrect. Please try again.
                     </div>
+                  } @else {
+                    <p class="otp-expire-note"><i class="bi bi-clock"></i> Code expires in 10 minutes</p>
                   }
                 </div>
               </div>
               <div class="btn-row">
                 <button type="submit" class="submit-btn" [disabled]="loading()">
                   @if (loading()) {
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                     Verifying OTP...
                   } @else {
-                    Verify OTP <i class="bi bi-arrow-right ms-1"></i>
+                    <i class="bi bi-check2-circle"></i>
+                    Verify OTP
                   }
                 </button>
               </div>
