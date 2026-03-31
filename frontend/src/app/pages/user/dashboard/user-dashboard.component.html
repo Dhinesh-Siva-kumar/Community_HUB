@@ -3,41 +3,50 @@
 <!-- ============================================================ -->
 @if (loading()) {
   <div class="dashboard-skeleton">
-    <!-- Skeleton: Feed column -->
-    <div class="sk-feed">
-      <div class="sk-banner"></div>
-      <div class="sk-stat-row">
-        @for (_ of [1,2,3,4,5]; track _) {
-          <div class="sk-stat"></div>
-        }
-      </div>
-      @for (_ of [1,2]; track _) {
-        <div class="sk-card">
-          <div class="sk-header">
-            <div class="sk-avatar"></div>
-            <div class="sk-lines">
-              <div class="sk-line sk-short"></div>
-              <div class="sk-line sk-medium"></div>
-            </div>
-          </div>
-          <div class="sk-line sk-title"></div>
-          <div class="sk-line"></div>
-          <div class="sk-line sk-medium"></div>
-        </div>
+    <!-- Skeleton: Banner -->
+    <div class="sk-banner"></div>
+    <!-- Skeleton: Stats -->
+    <div class="sk-stat-row">
+      @for (_ of [1,2,3,4,5]; track _) {
+        <div class="sk-stat"></div>
       }
     </div>
-    <!-- Skeleton: Sidebar column -->
-    <div class="sk-sidebar">
-      <div class="sk-card" style="padding: 24px; text-align: center;">
-        <div class="sk-ring"></div>
-        <div class="sk-line sk-short" style="margin: 0 auto 8px;"></div>
-        <div class="sk-line sk-medium" style="margin: 0 auto;"></div>
+    <!-- Skeleton: Main layout -->
+    <div class="sk-main-layout">
+      <div class="sk-feed">
+        <div class="sk-tab-bar"></div>
+        @for (_ of [1,2,3]; track _) {
+          <div class="sk-card">
+            <div class="sk-header">
+              <div class="sk-avatar"></div>
+              <div class="sk-lines">
+                <div class="sk-line sk-short"></div>
+                <div class="sk-line sk-medium"></div>
+              </div>
+            </div>
+            <div class="sk-line sk-title"></div>
+            <div class="sk-line"></div>
+            <div class="sk-line sk-medium"></div>
+            <div class="sk-actions-row">
+              <div class="sk-line sk-tiny"></div>
+              <div class="sk-line sk-tiny"></div>
+              <div class="sk-line sk-tiny"></div>
+            </div>
+          </div>
+        }
       </div>
-      <div class="sk-card">
-        <div class="sk-line sk-title" style="margin-bottom: 12px;"></div>
-        <div class="sk-line"></div>
-        <div class="sk-line sk-medium"></div>
-        <div class="sk-line sk-short"></div>
+      <div class="sk-sidebar">
+        <div class="sk-card" style="padding: 24px; text-align: center;">
+          <div class="sk-ring"></div>
+          <div class="sk-line sk-short" style="margin: 0 auto 8px;"></div>
+          <div class="sk-line sk-medium" style="margin: 0 auto;"></div>
+        </div>
+        <div class="sk-card">
+          <div class="sk-line sk-title" style="margin-bottom: 12px;"></div>
+          <div class="sk-line"></div>
+          <div class="sk-line sk-medium"></div>
+          <div class="sk-line sk-short"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -47,12 +56,14 @@
 <!-- MAIN DASHBOARD                                               -->
 <!-- ============================================================ -->
 <div class="dashboard">
-  <div class="dashboard-layout">
 
-    <!-- ===== LEFT: FEED COLUMN ===== -->
-    <div class="feed-col">
+  <!-- ===== 2-COLUMN LAYOUT: CONTENT + SIDEBAR ===== -->
+  <div class="dashboard-grid">
 
-      <!-- Welcome Banner -->
+    <!-- ===== LEFT: MAIN CONTENT ===== -->
+    <div class="dashboard-main">
+
+      <!-- ===== WELCOME BANNER ===== -->
       <div class="welcome-banner">
         <div class="welcome-text">
           <h2>{{ greeting() }}, {{ firstName() }}!</h2>
@@ -67,8 +78,8 @@
         </a>
       </div>
 
-      <!-- Stats Row -->
-      <div class="stats-row">
+      <!-- ===== STATS ROW ===== -->
+      <!-- <div class="stats-row">
         @for (stat of animatedStats(); track stat.label) {
           <div class="stat-card">
             <div class="stat-icon-wrap" [style.background]="stat.bgColor">
@@ -80,59 +91,324 @@
             </div>
           </div>
         }
+      </div> -->
+
+      <!-- Tab Bar -->
+      <div class="tab-bar">
+        @for (tab of tabs; track tab.key) {
+          <button
+            class="tab-item"
+            [class.active]="activeTab() === tab.key"
+            (click)="switchTab(tab.key)"
+          >
+            <i class="bi {{ tab.icon }}"></i>
+            <span>{{ tab.label }}</span>
+          </button>
+        }
       </div>
 
-      <!-- Recent Community Posts -->
-      <div class="dash-card posts-card">
-        <div class="dash-card-header">
-          <div class="header-left">
-            <i class="bi bi-chat-left-text-fill header-icon"></i>
-            <h6 class="header-title">Recent Posts</h6>
-          </div>
-          <a routerLink="/user/community" class="btn-view-all">View All →</a>
-        </div>
-
-        @if (recentPosts().length === 0) {
-          <div class="posts-empty">
-            <div class="empty-illustration">
-              <app-people-connection width="200" height="120"></app-people-connection>
+      <!-- Post Feed -->
+      @if (loadingPosts()) {
+        <div class="posts-loading">
+          @for (_ of [1,2,3]; track _) {
+            <div class="sk-card post-skeleton">
+              <div class="sk-header">
+                <div class="sk-avatar"></div>
+                <div class="sk-lines">
+                  <div class="sk-line sk-short"></div>
+                  <div class="sk-line sk-medium"></div>
+                </div>
+              </div>
+              <div class="sk-line sk-title"></div>
+              <div class="sk-line"></div>
+              <div class="sk-line sk-medium"></div>
             </div>
-            <h6>No recent posts yet</h6>
-            <p>Join a community to see posts from your neighbours!</p>
-            <a routerLink="/user/community" class="cta-btn">
+          }
+        </div>
+      } @else if (filteredPosts().length === 0) {
+        @if (activeTab() === 'ALL') {
+          <div class="empty-state empty-state--indigo">
+            <div class="empty-state__icon-ring">
+              <i class="bi bi-chat-square-text-fill"></i>
+            </div>
+            <h4 class="empty-state__title">No posts yet</h4>
+            <p class="empty-state__desc">Join a community to see posts from your neighbours and stay connected!</p>
+            <a routerLink="/user/community" class="empty-state__cta">
               <i class="bi bi-search"></i> Find Communities
             </a>
           </div>
+        } @else if (activeTab() === 'POPULAR') {
+          <div class="empty-state empty-state--amber">
+            <div class="empty-state__icon-ring">
+              <i class="bi bi-fire"></i>
+            </div>
+            <h4 class="empty-state__title">No popular posts</h4>
+            <p class="empty-state__desc">Posts with the most likes and engagement will appear here. Start interacting!</p>
+          </div>
+        } @else if (activeTab() === 'HELP') {
+          <div class="empty-state empty-state--cyan">
+            <div class="empty-state__icon-ring">
+              <i class="bi bi-hand-thumbs-up-fill"></i>
+            </div>
+            <h4 class="empty-state__title">No help requests</h4>
+            <p class="empty-state__desc">Help requests from your communities will appear here. Check back soon!</p>
+          </div>
         } @else {
-          <div class="post-list">
-            @for (post of recentPosts(); track post.id) {
-              <div class="post-item">
-                <div class="post-avatar">
-                  <i class="bi {{ getPostTypeBadge(post.type).icon }}"></i>
+          <div class="empty-state empty-state--rose">
+            <div class="empty-state__icon-ring">
+              <i class="bi bi-shield-exclamation"></i>
+            </div>
+            <h4 class="empty-state__title">No emergency posts</h4>
+            <p class="empty-state__desc">Emergency alerts from your communities will show here. All clear for now!</p>
+          </div>
+        }
+      } @else {
+        <div class="post-feed">
+          @for (post of filteredPosts(); track post.id) {
+            <div class="post-card">
+              <!-- Post Header -->
+              <div class="post-card-header">
+                <div class="post-user-avatar">
+                  @if (post.user?.avatar) {
+                    <img [src]="post.user?.avatar" [alt]="post.user?.firstName ?? 'User'" />
+                  } @else {
+                    <span>{{ getUserInitials(post.user) }}</span>
+                  }
                 </div>
-                <div class="post-body">
-                  <div class="post-meta">
-                    <span class="post-badge" [class]="getPostTypeBadge(post.type).class">
+                <div class="post-user-info">
+                  <div class="post-user-name">
+                    {{ post.user?.firstName ?? 'User' }} {{ post.user?.lastName ?? '' }}
+                  </div>
+                  <div class="post-meta-row">
+                    <span class="post-type-badge" [class]="getPostTypeBadge(post.type).class">
+                      <i class="bi {{ getPostTypeBadge(post.type).icon }}"></i>
                       {{ getPostTypeBadge(post.type).label }}
                     </span>
-                    <span class="post-community">{{ post.communityName }}</span>
-                    <span class="post-time">{{ post.timeAgo }}</span>
-                  </div>
-                  <p class="post-content">{{ post.content }}</p>
-                  <div class="post-actions-row">
-                    <span class="post-action"><i class="bi bi-heart"></i> {{ post.likes }}</span>
-                    <span class="post-action"><i class="bi bi-chat"></i> {{ post.comments }}</span>
+                    <span class="post-community-name">
+                      <i class="bi bi-people-fill"></i>
+                      {{ post.community?.name ?? 'Community' }}
+                    </span>
                   </div>
                 </div>
+                <span class="post-time">{{ getTimeAgo(post.createdAt) }}</span>
               </div>
-            }
+
+              <!-- Post Content -->
+              <div class="post-card-content">
+                <p>{{ post.content }}</p>
+                @if (post.images && post.images.length > 0) {
+                  <div class="post-images">
+                    @for (img of post.images.slice(0, 3); track img) {
+                      <img [src]="img" alt="Post image" class="post-image-thumb" />
+                    }
+                    @if (post.images.length > 3) {
+                      <div class="post-image-more">+{{ post.images.length - 3 }}</div>
+                    }
+                  </div>
+                }
+              </div>
+
+              <!-- Post Actions -->
+              <div class="post-card-actions">
+                <button class="action-btn like-btn">
+                  <i class="bi" [class.bi-heart]="!post.isLiked" [class.bi-heart-fill]="post.isLiked"></i>
+                  <span>{{ post._count?.likes ?? 0 }}</span>
+                </button>
+                <button class="action-btn comment-btn">
+                  <i class="bi bi-chat-dots"></i>
+                  <span>{{ post._count?.comments ?? 0 }}</span>
+                </button>
+                <button
+                  class="action-btn save-btn"
+                  [class.saved]="isPostSaved(post.id)"
+                  (click)="toggleSavePost(post.id, $event)"
+                >
+                  <i class="bi" [class.bi-bookmark]="!isPostSaved(post.id)" [class.bi-bookmark-fill]="isPostSaved(post.id)"></i>
+                  <span>{{ isPostSaved(post.id) ? 'Saved' : 'Save' }}</span>
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+
+  <!-- ===== MY COMMUNITIES ===== -->
+  <div class="section-block">
+    <div class="section-header">
+      <div class="section-header-left">
+        <i class="bi bi-people-fill section-ico"></i>
+        <h5>My Communities</h5>
+      </div>
+      <a routerLink="/user/community" class="section-view-all">View All <i class="bi bi-arrow-right"></i></a>
+    </div>
+
+    @if (loadingCommunities()) {
+      <div class="communities-scroll">
+        @for (_ of [1,2,3,4]; track _) {
+          <div class="community-card sk-community">
+            <div class="sk-community-img"></div>
+            <div class="sk-line sk-short" style="margin: 10px auto 6px;"></div>
+            <div class="sk-line sk-tiny" style="margin: 0 auto;"></div>
           </div>
         }
       </div>
+    } @else if (joinedCommunities().length === 0) {
+      <div class="empty-state empty-state--violet">
+        <div class="empty-state__icon-ring">
+          <i class="bi bi-people-fill"></i>
+        </div>
+        <h4 class="empty-state__title">No communities yet</h4>
+        <p class="empty-state__desc">You haven't joined any communities yet. Discover and connect with your neighbours!</p>
+        <a routerLink="/user/community" class="empty-state__cta">
+          <i class="bi bi-plus-lg"></i> Join a Community
+        </a>
+      </div>
+    } @else {
+      <div class="communities-scroll">
+        @for (community of joinedCommunities(); track community.id) {
+          <a [routerLink]="['/user/community']" class="community-card">
+            <div class="community-card-img">
+              @if (community.image) {
+                <img [src]="community.image" [alt]="community.name" />
+              } @else {
+                <div class="community-card-placeholder">
+                  <i class="bi bi-people-fill"></i>
+                </div>
+              }
+            </div>
+            <div class="community-card-body">
+              <h6 class="community-card-name">{{ community.name }}</h6>
+              <div class="community-card-stats">
+                <span><i class="bi bi-person"></i> {{ community._count?.members ?? 0 }}</span>
+                <span><i class="bi bi-chat-left-text"></i> {{ community._count?.posts ?? 0 }}</span>
+              </div>
+            </div>
+          </a>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- ===== BOTTOM GRID: EVENTS + JOBS ===== -->
+  <div class="bottom-grid">
+
+    <!-- Upcoming Events -->
+    <div class="section-block">
+      <div class="section-header">
+        <div class="section-header-left">
+          <i class="bi bi-calendar-event-fill section-ico"></i>
+          <h5>Upcoming Events</h5>
+        </div>
+        <a routerLink="/user/events" class="section-view-all">View All <i class="bi bi-arrow-right"></i></a>
+      </div>
+
+      @if (loadingEvents()) {
+        <div class="events-list">
+          @for (_ of [1,2,3]; track _) {
+            <div class="event-item sk-event">
+              <div class="sk-event-date"></div>
+              <div class="sk-lines" style="flex:1;">
+                <div class="sk-line sk-medium"></div>
+                <div class="sk-line sk-short"></div>
+              </div>
+            </div>
+          }
+        </div>
+      } @else if (upcomingEvents().length === 0) {
+        <div class="empty-state empty-state--amber empty-state--compact">
+          <div class="empty-state__icon-ring">
+            <i class="bi bi-calendar-heart-fill"></i>
+          </div>
+          <h4 class="empty-state__title">No upcoming events</h4>
+          <p class="empty-state__desc">Events from your communities will appear here.</p>
+        </div>
+      } @else {
+        <div class="events-list">
+          @for (event of upcomingEvents(); track event.id) {
+            <div class="event-item">
+              <div class="event-date-badge">
+                <span class="event-month">{{ getEventMonth(event.eventDate) }}</span>
+                <span class="event-day">{{ getEventDay(event.eventDate) }}</span>
+              </div>
+              <div class="event-info">
+                <h6 class="event-title">{{ event.title }}</h6>
+                <div class="event-details">
+                  @if (event.eventTime) {
+                    <span><i class="bi bi-clock"></i> {{ event.eventTime }}</span>
+                  }
+                  @if (event.location) {
+                    <span><i class="bi bi-geo-alt"></i> {{ event.location }}</span>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
     </div>
 
-    <!-- ===== RIGHT: SIDEBAR COLUMN ===== -->
-    <aside class="sidebar-col">
+    <!-- Recent Jobs -->
+    <div class="section-block">
+      <div class="section-header">
+        <div class="section-header-left">
+          <i class="bi bi-briefcase-fill section-ico"></i>
+          <h5>Recent Jobs</h5>
+        </div>
+        <a routerLink="/user/jobs" class="section-view-all">View All <i class="bi bi-arrow-right"></i></a>
+      </div>
+
+      @if (loadingJobs()) {
+        <div class="jobs-list">
+          @for (_ of [1,2,3]; track _) {
+            <div class="job-item sk-job">
+              <div class="sk-lines" style="flex:1;">
+                <div class="sk-line sk-medium"></div>
+                <div class="sk-line sk-short"></div>
+              </div>
+            </div>
+          }
+        </div>
+      } @else if (recentJobs().length === 0) {
+        <div class="empty-state empty-state--cyan empty-state--compact">
+          <div class="empty-state__icon-ring">
+            <i class="bi bi-rocket-takeoff-fill"></i>
+          </div>
+          <h4 class="empty-state__title">No job listings yet</h4>
+          <p class="empty-state__desc">Job opportunities from your area will show here.</p>
+        </div>
+      } @else {
+        <div class="jobs-list">
+          @for (job of recentJobs(); track job.id) {
+            <a [routerLink]="['/user/jobs']" class="job-item">
+              <div class="job-info">
+                <h6 class="job-title">{{ job.title }}</h6>
+                <div class="job-details">
+                  @if (job.salary) {
+                    <span class="job-salary"><i class="bi bi-currency-pound"></i> {{ job.salary }}</span>
+                  }
+                  @if (job.jobType) {
+                    <span class="job-type"><i class="bi bi-tag"></i> {{ job.jobType }}</span>
+                  }
+                </div>
+              </div>
+              <div class="job-meta">
+                @if (job.location) {
+                  <span><i class="bi bi-geo-alt"></i> {{ job.location }}</span>
+                }
+                <span><i class="bi bi-clock"></i> {{ getTimeAgo(job.createdAt) }}</span>
+              </div>
+            </a>
+          }
+        </div>
+      }
+    </div>
+
+  </div>
+
+  </div><!-- /.dashboard-main -->
+
+  <!-- ===== RIGHT: SIDEBAR COLUMN (full-height sticky) ===== -->
+  <aside class="sidebar-col">
 
       <!-- Profile Completion -->
       <div class="sidebar-card">
@@ -169,7 +445,9 @@
             </ul>
           } @else {
             <div class="profile-complete-msg">
-              <i class="bi bi-patch-check-fill"></i>
+              <div class="empty-state__icon-ring empty-state__icon-ring--success">
+                <i class="bi bi-patch-check-fill"></i>
+              </div>
               <p>Your profile is complete!</p>
             </div>
           }
@@ -192,10 +470,12 @@
         </div>
 
         @if (latestNotifications().length === 0) {
-          <div class="notif-empty">
-            <i class="bi bi-bell-slash"></i>
-            <p>You're all caught up!</p>
-            <span>No new notifications</span>
+          <div class="empty-state empty-state--emerald empty-state--compact">
+            <div class="empty-state__icon-ring">
+              <i class="bi bi-bell-fill"></i>
+            </div>
+            <h4 class="empty-state__title">You're all caught up!</h4>
+            <p class="empty-state__desc">No new notifications</p>
           </div>
         } @else {
           <div class="notification-list">
@@ -220,7 +500,7 @@
               </div>
             }
           </div>
-          <a routerLink="/user/notifications" class="see-all-link">View all notifications →</a>
+          <a routerLink="/user/notifications" class="see-all-link">View all notifications</a>
         }
       </div>
 
@@ -245,8 +525,10 @@
         </div>
       </div>
 
-    </aside>
-  </div>
+  </aside>
+
+  </div><!-- /.dashboard-grid -->
+
 </div>
 
 }
