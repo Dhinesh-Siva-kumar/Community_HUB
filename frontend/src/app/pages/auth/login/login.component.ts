@@ -52,7 +52,12 @@ export class LoginComponent {
     const { identifier, password } = this.loginForm.value;
 
     this.authService.login(identifier, password).subscribe({
-      next: () => {
+      next: (resp: any) => {
+        if(resp.user.roleLevel >= 50) {
+          this.router.navigate(['/admin/dashboard']);
+          this.toastService.success('Admin login successful! Welcome back.');
+          return;
+        }
         this.loading.set(false);
         this.toastService.success('Login successful! Welcome back.');
         this.router.navigate(['/user/dashboard']);

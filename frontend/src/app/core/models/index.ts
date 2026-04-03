@@ -28,6 +28,8 @@ export interface User {
   userName: string;
   firstName: string;
   lastName: string;
+  userRole: string;
+  roleLevel: number;
   phone?: string;
   avatar?: string;
   role: 'ADMIN' | 'USER';
