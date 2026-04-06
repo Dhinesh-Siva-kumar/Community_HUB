@@ -1,14 +1,15 @@
 import {
-  Component, OnInit, OnDestroy, AfterViewInit,
+  Component, OnInit, OnDestroy, AfterViewInit, ViewChild,
   Inject, PLATFORM_ID, ElementRef, HostBinding, HostListener, NgZone
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.scss']
 })
@@ -58,17 +59,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   applicationName = 'Community HUB';
 
-  // ── Hero cursor spotlight ──
-  heroSpotX = 50;
-  heroSpotY = 50;
-
-  onHeroMouseMove(event: MouseEvent): void {
-    const hero = event.currentTarget as HTMLElement;
-    const rect = hero.getBoundingClientRect();
-    this.heroSpotX = ((event.clientX - rect.left) / rect.width) * 100;
-    this.heroSpotY = ((event.clientY - rect.top) / rect.height) * 100;
-  }
-
   // ── Features (Bento Grid) ──
   features = [
     {
@@ -110,6 +100,8 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   ];
 
   // ── Communities Showcase ──
+  @ViewChild('commScroll') commScrollRef!: ElementRef<HTMLElement>;
+
   communities = [
     { name: 'Tech Innovators', members: 2340, category: 'Technology', color: 'primary', icon: 'bi-cpu-fill' },
     { name: 'Local Foodies', members: 1850, category: 'Food & Drink', color: 'pink', icon: 'bi-cup-hot-fill' },
@@ -121,24 +113,29 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     { name: 'Dev Community', members: 4200, category: 'Technology', color: 'primary', icon: 'bi-code-slash' }
   ];
 
+  scrollCommunities(direction: 'left' | 'right'): void {
+    const el = this.commScrollRef?.nativeElement;
+    if (!el) return;
+    const scrollAmount = 280; // card width + gap
+    el.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
+  }
+
   // ── How It Works Timeline ──
   steps = [
     { num: '01', title: 'Create Your Account', desc: 'Sign up free in seconds. No credit card needed, ever.', color: 'primary' },
     { num: '02', title: 'Discover Communities', desc: 'Browse and join communities that match your interests and location.', color: 'violet' },
-    { num: '03', title: 'Engage & Post', desc: 'Share updates, start discussions, and connect with members.', color: 'green' },
-    { num: '04', title: 'Attend Events', desc: 'Find local meetups, workshops, and virtual gatherings nearby.', color: 'pink' },
-    { num: '05', title: 'Find Opportunities', desc: 'Browse jobs and businesses posted within your communities.', color: 'yellow' },
-    { num: '06', title: 'Grow Your Network', desc: 'Build meaningful connections and make a real impact locally.', color: 'accent' }
+    { num: '03', title: 'Engage & Connect', desc: 'Share updates, attend events, and build meaningful connections with members.', color: 'green' },
+    { num: '04', title: 'Grow Your Network', desc: 'Find jobs, explore businesses, and make a real impact in your community.', color: 'pink' }
   ];
 
   // ── Why Choose Us ──
   whyCards = [
-    { icon: 'bi-shield-check', title: 'Privacy First', desc: 'Your data stays yours. End-to-end encryption and transparent privacy controls.', stat: '100%', statLabel: 'Secure' },
-    { icon: 'bi-lightning-charge-fill', title: 'Real-time Everything', desc: 'WebSocket-powered notifications, posts, and updates delivered instantly.', stat: '<1s', statLabel: 'Latency' },
-    { icon: 'bi-heart-fill', title: 'Free Forever', desc: 'No hidden fees, no premium tiers. Every feature is available to everyone.', stat: '$0', statLabel: 'Always' },
-    { icon: 'bi-globe2', title: 'Available Worldwide', desc: 'Connect with communities across the globe, regardless of geography.', stat: '190+', statLabel: 'Countries' },
-    { icon: 'bi-phone-fill', title: 'Mobile Friendly', desc: 'Responsive design that works perfectly on any device, any screen size.', stat: '100%', statLabel: 'Responsive' },
-    { icon: 'bi-gear-fill', title: 'Easy to Use', desc: 'Intuitive interface that anyone can navigate. No learning curve required.', stat: '5min', statLabel: 'Setup' }
+    { icon: 'bi-shield-check', title: 'Privacy First', desc: 'Your data stays yours. End-to-end encryption and transparent privacy controls.', stat: '100%', statLabel: 'Secure', color: 'primary' },
+    // { icon: 'bi-lightning-charge-fill', title: 'Real-time Everything', desc: 'WebSocket-powered notifications, posts, and updates delivered instantly.', stat: '<1s', statLabel: 'Latency', color: 'violet' },
+    { icon: 'bi-globe2', title: 'Available Worldwide', desc: 'Connect with communities across the globe, regardless of geography.', stat: '190+', statLabel: 'Countries', color: 'green' },
+    { icon: 'bi-heart-fill', title: 'Free Forever', desc: 'No hidden fees, no premium tiers. Every feature is available to everyone.', stat: '$0', statLabel: 'Always', color: 'pink' },
+    // { icon: 'bi-phone-fill', title: 'Mobile Friendly', desc: 'Responsive design that works perfectly on any device, any screen size.', stat: '100%', statLabel: 'Responsive', color: 'yellow' },
+    // { icon: 'bi-gear-fill', title: 'Easy to Use', desc: 'Intuitive interface that anyone can navigate. No learning curve required.', stat: '5min', statLabel: 'Setup', color: 'accent' }
   ];
 
   // ── Testimonials (Multi-card) ──
@@ -188,6 +185,19 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   ];
 
+  // ── Contact Form ──
+  contact = { firstName: '', lastName: '', email: '', subject: '', message: '' };
+  contactSubmitted = false;
+
+  submitContact(): void {
+    this.contactSubmitted = true;
+  }
+
+  resetContactForm(): void {
+    this.contact = { firstName: '', lastName: '', email: '', subject: '', message: '' };
+    this.contactSubmitted = false;
+  }
+
   // ── Marquee items ──
   marqueeItems = [
     { icon: 'bi-people-fill', text: 'Communities' },
@@ -208,25 +218,10 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   counterValues: Record<string, string> = {};
   private countersAnimated = false;
 
-  // ── Mouse-follow glow (cards) ──
-  onCardMouseMove(event: MouseEvent): void {
-    const card = event.currentTarget as HTMLElement;
-    const rect = card.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    card.style.setProperty('--glow-x', `${x}px`);
-    card.style.setProperty('--glow-y', `${y}px`);
-  }
-  onCardMouseLeave(event: MouseEvent): void {
-    const card = event.currentTarget as HTMLElement;
-    card.style.removeProperty('--glow-x');
-    card.style.removeProperty('--glow-y');
-  }
-
   // ── Observers & lifecycle ──
   private sectionObserver!: IntersectionObserver;
   private revealObserver!: IntersectionObserver;
-  private readonly sectionIds = ['home', 'features', 'communities', 'how-it-works', 'why-us', 'testimonials', 'about', 'blog'];
+  private readonly sectionIds = ['home', 'features', 'communities', 'how-it-works', 'testimonials', 'about', 'blog', 'contact'];
 
   ngOnInit(): void {
     this.loadTheme();
