@@ -1,9 +1,9 @@
 <!-- ═══════════════════════════════════════════════════════════
-     COMMUNITY HUB — Glassmorphism + Neon Landing Page v3
-     12 Sections | Product Mock UI | All Visual Techniques
+     COMMUNITY HUB — Dark & Premium Landing Page
+     12 Sections | Cursor Spotlight | Animated Borders | Card Glow
      ═══════════════════════════════════════════════════════════ -->
 
-<!-- ═══ 1. NAVBAR (~56px) ═══ -->
+<!-- ═══ 1. NAVBAR ═══ -->
 <nav class="lp-nav" [class.scrolled]="navScrolled">
   <a class="lp-logo" routerLink="/landing">
     <img src="logo.svg" alt="Community HUB" class="lp-logo-img" />
@@ -24,7 +24,7 @@
       <i class="bi" [ngClass]="currentTheme === 'dark' ? 'bi-sun-fill' : 'bi-moon-fill'"></i>
     </button>
     <a routerLink="/auth/login" class="lp-btn lp-btn-ghost lp-btn-sm">Log In</a>
-    <a routerLink="/auth/register" class="lp-btn lp-btn-neon lp-btn-sm lp-btn-shimmer">Get Started</a>
+    <a routerLink="/auth/register" class="lp-btn lp-btn-neon lp-btn-sm">Get Started</a>
   </div>
 
   <button class="lp-burger" [class.open]="mobileOpen" (click)="toggleMobile()" aria-label="Toggle menu">
@@ -51,21 +51,14 @@
 </div>
 
 
-<!-- ═══ 2. HERO — Static headline + Product Mock UI ═══ -->
+<!-- ═══ 2. HERO ═══ -->
 <section class="lp-hero" id="home"
          (mousemove)="onHeroMouseMove($event)"
          [style.--spot-x.%]="heroSpotX"
          [style.--spot-y.%]="heroSpotY">
-  <!-- Background effects -->
-  <div class="lp-hero-mesh"></div>
-  <div class="lp-hero-grid-dots"></div>
+  <!-- Background -->
+  <div class="lp-hero-bg"></div>
   <div class="lp-hero-spot"></div>
-  <div class="lp-hero-orbs">
-    <div class="lp-orb lp-orb-1"></div>
-    <div class="lp-orb lp-orb-2"></div>
-    <div class="lp-orb lp-orb-3"></div>
-    <div class="lp-orb lp-orb-4"></div>
-  </div>
 
   <div class="lp-hero-inner">
     <div class="lp-hero-content">
@@ -102,28 +95,28 @@
     <!-- Floating Feature Cards -->
     <div class="lp-hero-mock rv d2">
       <div class="lp-float-cards">
-        <div class="lp-fcard lp-fcard-1 glass-card">
+        <div class="lp-fcard lp-fcard-1">
           <div class="lp-fcard-icon" style="--fc-clr: var(--lp-primary)"><i class="bi bi-people-fill"></i></div>
           <div class="lp-fcard-text">
             <strong>Communities</strong>
             <span>Join 500+ groups</span>
           </div>
         </div>
-        <div class="lp-fcard lp-fcard-2 glass-card">
+        <div class="lp-fcard lp-fcard-2">
           <div class="lp-fcard-icon" style="--fc-clr: var(--lp-pink)"><i class="bi bi-calendar-event-fill"></i></div>
           <div class="lp-fcard-text">
             <strong>Events</strong>
             <span>Discover & attend</span>
           </div>
         </div>
-        <div class="lp-fcard lp-fcard-3 glass-card">
+        <div class="lp-fcard lp-fcard-3">
           <div class="lp-fcard-icon" style="--fc-clr: var(--lp-green)"><i class="bi bi-briefcase-fill"></i></div>
           <div class="lp-fcard-text">
             <strong>Jobs</strong>
             <span>Find opportunities</span>
           </div>
         </div>
-        <div class="lp-fcard lp-fcard-4 glass-card">
+        <div class="lp-fcard lp-fcard-4">
           <div class="lp-fcard-icon" style="--fc-clr: var(--lp-violet)"><i class="bi bi-shop"></i></div>
           <div class="lp-fcard-text">
             <strong>Business</strong>
@@ -169,7 +162,6 @@
              (mouseleave)="onCardMouseLeave($event)">
           <div class="lp-fc-glow"></div>
 
-          <!-- Animated gradient border on featured card -->
           @if (f.featured) {
             <div class="lp-anim-border"></div>
           }
@@ -180,7 +172,6 @@
           <h3>{{ f.title }}</h3>
           <p>{{ f.desc }}</p>
 
-          <!-- Mini mock UI in featured card -->
           @if (f.featured) {
             <div class="lp-featured-mock">
               <div class="lp-fm-card">
@@ -314,7 +305,7 @@
 
 <div class="lp-section-divider"></div>
 
-<!-- ═══ 8. TESTIMONIALS — Multi-card visible layout ═══ -->
+<!-- ═══ 8. TESTIMONIALS ═══ -->
 <section class="lp-section lp-testi-section lp-section-mesh" id="testimonials">
   <div class="lp-wrap">
     <div class="lp-sec-head rv">
@@ -451,13 +442,13 @@
 
 <div class="lp-section-divider lp-divider-pink"></div>
 
-<!-- ═══ 11. CTA BANNER — Gradient mesh + animated border ═══ -->
+<!-- ═══ 11. CTA BANNER ═══ -->
 <section class="lp-cta">
   <div class="lp-cta-mesh"></div>
 
   <div class="lp-wrap lp-cta-inner rv">
     <div class="lp-cta-duo">
-      <!-- Existing CTA card -->
+      <!-- CTA card -->
       <div class="lp-cta-glass glass-card">
         <div class="lp-fc-glow"></div>
         <div class="lp-anim-border"></div>
@@ -509,7 +500,7 @@
 
 <!-- ═══ 12. FOOTER ═══ -->
 <footer class="lp-footer">
-  <div class="lp-footer-glow-line"></div>
+  <!-- <div class="lp-footer-glow-line"></div> -->
   <div class="lp-wrap">
     <div class="lp-footer-grid">
       <!-- Brand -->
@@ -577,21 +568,21 @@
 </footer>
 
 <!-- ═══ FLOATING SOCIAL BUTTONS — LEFT SIDE ═══ -->
-<div class="lp-float-left">
+<!-- <div class="lp-float-left">
   <a href="https://instagram.com/" target="_blank" rel="noopener" class="lp-float-btn lp-float-instagram" aria-label="Instagram">
     <i class="bi bi-instagram"></i>
   </a>
   <a href="https://youtube.com/" target="_blank" rel="noopener" class="lp-float-btn lp-float-youtube" aria-label="YouTube">
     <i class="bi bi-youtube"></i>
   </a>
-</div>
+</div> -->
 
 <!-- ═══ FLOATING SOCIAL BUTTONS — RIGHT SIDE ═══ -->
-<div class="lp-float-right">
+<!-- <div class="lp-float-right">
   <a href="https://wa.me/" target="_blank" rel="noopener" class="lp-float-btn lp-float-whatsapp" aria-label="WhatsApp">
     <i class="bi bi-whatsapp"></i>
   </a>
   <a href="https://t.me/" target="_blank" rel="noopener" class="lp-float-btn lp-float-telegram" aria-label="Telegram">
     <i class="bi bi-telegram"></i>
   </a>
-</div>
+</div> -->

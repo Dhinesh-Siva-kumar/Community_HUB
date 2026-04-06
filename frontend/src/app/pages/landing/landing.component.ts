@@ -227,8 +227,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   private sectionObserver!: IntersectionObserver;
   private revealObserver!: IntersectionObserver;
   private readonly sectionIds = ['home', 'features', 'communities', 'how-it-works', 'why-us', 'testimonials', 'about', 'blog'];
-  private parallaxRaf: number | null = null;
-  private scrollHandler: (() => void) | null = null;
 
   ngOnInit(): void {
     this.loadTheme();
@@ -239,17 +237,12 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       this.setupSectionObserver();
       this.setupRevealObserver();
       this.setupCounterObserver();
-      this.setupParallax();
     }
   }
 
   ngOnDestroy(): void {
     this.sectionObserver?.disconnect();
     this.revealObserver?.disconnect();
-    if (this.parallaxRaf) cancelAnimationFrame(this.parallaxRaf);
-    if (this.scrollHandler) {
-      window.removeEventListener('scroll', this.scrollHandler);
-    }
   }
 
   private setupSectionObserver(): void {
@@ -338,25 +331,4 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.counterValues[stat.value] || '0';
   }
 
-  // ── Parallax orbs ──
-  private setupParallax(): void {
-    this.zone.runOutsideAngular(() => {
-      let ticking = false;
-      this.scrollHandler = () => {
-        if (!ticking) {
-          ticking = true;
-          this.parallaxRaf = requestAnimationFrame(() => {
-            const scrollY = window.scrollY;
-            const orbs = this.el.nativeElement.querySelectorAll('.lp-orb');
-            orbs.forEach((orb: HTMLElement, i: number) => {
-              const speed = 0.03 + i * 0.015;
-              orb.style.transform = `translateY(${scrollY * speed}px)`;
-            });
-            ticking = false;
-          });
-        }
-      };
-      window.addEventListener('scroll', this.scrollHandler, { passive: true });
-    });
-  }
 }
