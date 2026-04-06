@@ -1,5 +1,5 @@
-import { Component, inject, signal, ViewChildren, QueryList, ElementRef, AfterViewInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, signal, ViewChildren, QueryList, ElementRef, AfterViewInit, HostBinding, PLATFORM_ID, OnInit } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
@@ -24,11 +24,12 @@ function usernameOrEmailValidator(control: AbstractControl): ValidationErrors | 
     templateUrl: './forgot-password.component.html',
     styleUrls: ['./forgot-password.component.scss'],
 })
-export class ForgotPasswordComponent {
+export class ForgotPasswordComponent implements OnInit {
     private fb = inject(FormBuilder);
     private authService = inject(AuthService);
     private toastService = inject(ToastService);
     private router = inject(Router);
+    private platformId = inject(PLATFORM_ID) as object;
 
     @ViewChildren('otpBox') otpBoxes!: QueryList<ElementRef<HTMLInputElement>>;
 
@@ -38,6 +39,30 @@ export class ForgotPasswordComponent {
     showPassword = signal(false);
     maskedPhone = '';
     otpDigits = ['', '', '', '', '', ''];
+
+    // ── Theme ──
+    currentTheme: 'dark' | 'light' = 'dark';
+
+    @HostBinding('attr.data-theme')
+    get theme(): string { return this.currentTheme; }
+
+    toggleTheme(): void {
+        this.currentTheme = this.currentTheme === 'dark' ? 'light' : 'dark';
+        if (isPlatformBrowser(this.platformId)) {
+            localStorage.setItem('landing-theme', this.currentTheme);
+        }
+    }
+
+    private loadTheme(): void {
+        if (isPlatformBrowser(this.platformId)) {
+            const saved = localStorage.getItem('landing-theme') as 'dark' | 'light' | null;
+            if (saved) this.currentTheme = saved;
+        }
+    }
+
+    ngOnInit(): void {
+        this.loadTheme();
+    }
 
     resetForm: FormGroup = this.fb.group({
         usernameOrEmail: ['', [Validators.required, usernameOrEmailValidator]],

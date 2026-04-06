@@ -1,5 +1,5 @@
-import { Component, ElementRef, inject, QueryList, signal, ViewChildren } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, ElementRef, inject, QueryList, signal, ViewChildren, HostBinding, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   ReactiveFormsModule,
   FormBuilder,
@@ -39,7 +39,28 @@ export class RegisterComponent {
   step = signal<'form' | 'otp'>('form');
 
   private destroy$ = new Subject<void>();
+  private platformId = inject(PLATFORM_ID) as object;
   @ViewChildren('otpBox') otpBoxes!: QueryList<ElementRef<HTMLInputElement>>;
+
+  // ── Theme ──
+  currentTheme: 'dark' | 'light' = 'dark';
+
+  @HostBinding('attr.data-theme')
+  get theme(): string { return this.currentTheme; }
+
+  toggleTheme(): void {
+    this.currentTheme = this.currentTheme === 'dark' ? 'light' : 'dark';
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('landing-theme', this.currentTheme);
+    }
+  }
+
+  private loadTheme(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      const saved = localStorage.getItem('landing-theme') as 'dark' | 'light' | null;
+      if (saved) this.currentTheme = saved;
+    }
+  }
 
   constructor(
     private fb : FormBuilder,
@@ -50,6 +71,7 @@ export class RegisterComponent {
   { }
 
 ngOnInit(){
+  this.loadTheme();
   this.initializeForm();
   this.loadCountries();
   this.registerForm.get('userName')?.valueChanges.pipe(

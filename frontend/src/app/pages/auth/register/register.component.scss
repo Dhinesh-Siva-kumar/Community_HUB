@@ -5,13 +5,88 @@
 // ===========================
 
 // ============================================================
+// THEME VARIABLES
+// ============================================================
+:host[data-theme="light"] {
+  --auth-bg: #{$bg};
+  --auth-bg2: #{$white};
+  --auth-surface: #{$bg-neutral};
+  --auth-border: #{$border};
+  --auth-text: #{$dark};
+  --auth-text2: #{$text-body};
+  --auth-muted: #{$muted};
+  --auth-input-bg: #{$bg-neutral};
+  --auth-input-focus-bg: #{$white};
+  --auth-placeholder: #{$gray-400};
+  --auth-toggle-bg: rgba(0, 0, 0, 0.06);
+  --auth-toggle-color: #{$dark};
+  --auth-toggle-hover-bg: rgba(0, 0, 0, 0.10);
+  --auth-social-hover-bg: #{$gray-50};
+  --auth-otp-box-bg: #{$white};
+  --auth-otp-filled-bg: linear-gradient(135deg, rgba(#{$color-primary-rgb}, 0.06) 0%, rgba(235, 69, 158, 0.04) 100%);
+  --auth-otp-filled-color: #{$primary};
+}
+
+:host[data-theme="dark"] {
+  --auth-bg: #07071a;
+  --auth-bg2: #111132;
+  --auth-surface: #1a1a3e;
+  --auth-border: rgba(255, 255, 255, 0.10);
+  --auth-text: #ffffff;
+  --auth-text2: #a0aec0;
+  --auth-muted: #6b7280;
+  --auth-input-bg: rgba(255, 255, 255, 0.05);
+  --auth-input-focus-bg: rgba(255, 255, 255, 0.08);
+  --auth-placeholder: #4a5568;
+  --auth-toggle-bg: rgba(255, 255, 255, 0.08);
+  --auth-toggle-color: #ffffff;
+  --auth-toggle-hover-bg: rgba(255, 255, 255, 0.14);
+  --auth-social-hover-bg: rgba(255, 255, 255, 0.06);
+  --auth-otp-box-bg: rgba(255, 255, 255, 0.05);
+  --auth-otp-filled-bg: rgba(255, 255, 255, 0.08);
+  --auth-otp-filled-color: #{$primary};
+}
+
+// ============================================================
+// THEME TOGGLE BUTTON
+// ============================================================
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1.5px solid var(--auth-border);
+  background: var(--auth-toggle-bg);
+  color: var(--auth-toggle-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.25s, border-color 0.25s, transform 0.2s;
+  backdrop-filter: blur(8px);
+
+  i {
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  &:hover {
+    background: var(--auth-toggle-hover-bg);
+    transform: scale(1.08);
+  }
+}
+
+// ============================================================
 // PAGE
 // ============================================================
 .auth-page {
   min-height: 100vh;
   display: flex;
   align-items: stretch;
-  background: $bg;
+  background: var(--auth-bg);
 }
 
 .auth-container {
@@ -222,7 +297,7 @@
   align-items: center;
   justify-content: center;
   padding: 48px 24px;
-  background: $white;
+  background: var(--auth-bg2);
   overflow-y: auto;
 
   @include media-sm-max {
@@ -269,13 +344,13 @@
     h2 {
       font-size: 1.75rem;
       font-weight: 800;
-      color: $dark;
+      color: var(--auth-text);
       margin: 0 0 6px;
     }
 
     .subtitle {
       font-size: 14px;
-      color: $muted;
+      color: var(--auth-muted);
       margin: 0;
     }
   }
@@ -302,15 +377,15 @@
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    background: $gray-200;
-    color: $muted;
+    background: var(--auth-surface);
+    color: var(--auth-muted);
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
     font-size: 13px;
     transition: all 0.3s ease;
-    border: 1.5px solid $border;
+    border: 1.5px solid var(--auth-border);
 
     &.step-bounce {
       animation: stepBounce 0.4s ease;
@@ -319,7 +394,7 @@
 
   .step-label {
     font-size: 11px;
-    color: $muted;
+    color: var(--auth-muted);
     white-space: nowrap;
     font-weight: 600;
     transition: color 0.3s ease;
@@ -328,7 +403,7 @@
   .step-line {
     flex: 1;
     height: 2px;
-    background: $border;
+    background: var(--auth-border);
     margin: 17px -4px 0;
     transition: background 0.5s ease;
 
@@ -397,12 +472,12 @@
 .field-label {
   font-size: 13px;
   font-weight: 600;
-  color: $text-body;
+  color: var(--auth-text2);
 }
 
 .field-select {
   height: 48px;
-  background-color: #fafafa;
+  background-color: var(--auth-input-bg);
     padding-right: 36px; /* space for arrow */
 }
 
@@ -423,7 +498,7 @@
     position: absolute;
     left: 14px;
     font-size: 16px;
-    color: $muted;
+    color: var(--auth-muted);
     pointer-events: none;
     line-height: 1;
   }
@@ -432,21 +507,21 @@
     width: 100%;
     height: 48px;
     padding: 0 44px 0 42px;
-    border: 1.5px solid $border;
+    border: 1.5px solid var(--auth-border);
     border-radius: 10px;
     font-size: 14px;
-    color: $dark;
-    background: $bg-neutral;
+    color: var(--auth-text);
+    background: var(--auth-input-bg);
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
 
     &::placeholder {
-      color: $gray-400;
+      color: var(--auth-placeholder);
     }
 
     &:focus {
       border-color: $primary;
-      background: $white;
+      background: var(--auth-input-focus-bg);
       box-shadow: 0 0 0 3px rgba($primary, 0.1);
     }
 
@@ -477,7 +552,7 @@
     padding: 4px;
     display: flex;
     align-items: center;
-    color: $muted;
+    color: var(--auth-muted);
     transition: color 0.2s;
 
     &:hover {
@@ -510,9 +585,9 @@
 .interest-tag {
   padding: 7px 16px;
   border-radius: 20px;
-  border: 1.5px solid $border;
-  background: $white;
-  color: $text-body;
+  border: 1.5px solid var(--auth-border);
+  background: var(--auth-bg2);
+  color: var(--auth-text2);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -591,18 +666,18 @@
   gap: 4px;
   height: 50px;
   padding: 0 24px;
-  border: 1.5px solid $border;
+  border: 1.5px solid var(--auth-border);
   border-radius: 12px;
-  background: $white;
-  color: $text-body;
+  background: var(--auth-bg2);
+  color: var(--auth-text2);
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: border-color 0.2s, background 0.2s;
 
   &:hover {
-    border-color: $gray-700;
-    background: $gray-50;
+    border-color: var(--auth-border);
+    background: var(--auth-surface);
   }
 }
 
@@ -618,7 +693,7 @@
 .switch-auth {
   text-align: center;
   font-size: 13.5px;
-  color: $muted;
+  color: var(--auth-muted);
   margin: 24px 0 0;
 
   .switch-link {
@@ -638,14 +713,14 @@
 // ============================================================
 @include media-lg-max {
   .auth-form-wrapper {
-    background: $bg;
+    background: var(--auth-bg);
   }
 
   .auth-card {
-    background: $white;
+    background: var(--auth-bg2);
     border-radius: 16px;
     padding: 32px 24px;
-    border: 1px solid $border;
+    border: 1px solid var(--auth-border);
   }
 }
 
@@ -725,7 +800,7 @@
 
 .otp-hint {
   font-size: 13.5px;
-  color: $text-muted;
+  color: var(--auth-muted);
   text-align: center;
   margin: 0;
   font-weight: 500;
@@ -768,10 +843,10 @@
   font-size: 26px;
   font-weight: 800;
   font-family: inherit;
-  color: $dark;
-  border: 2px solid $border;
+  color: var(--auth-text);
+  border: 2px solid var(--auth-border);
   border-radius: 14px;
-  background: $white;
+  background: var(--auth-otp-box-bg);
   outline: none;
   transition: border-color 0.2s, box-shadow 0.25s, background 0.2s, transform 0.15s;
   caret-color: $primary;
@@ -850,7 +925,7 @@
   justify-content: center;
   gap: 5px;
   font-size: 12px;
-  color: $text-muted;
+  color: var(--auth-muted);
   margin-top: 16px;
   margin-bottom: 0;
 
@@ -892,7 +967,7 @@
   h3 {
     font-size: 22px;
     font-weight: 700;
-    color: $text-body;
+    color: var(--auth-text2);
     margin: 0 0 12px;
 
     @include media-sm-max {
@@ -902,7 +977,7 @@
   }
 
   p {
-    color: $muted;
+    color: var(--auth-muted);
     margin: 0 0 8px;
     font-size: 14px;
     line-height: 1.6;
@@ -913,7 +988,7 @@
 
     &.success-note {
       font-size: 12px;
-      color: $muted;
+      color: var(--auth-muted);
       font-style: italic;
       margin-bottom: 0;
 
