@@ -41,7 +41,7 @@ export class PostApprovalComponent implements OnInit {
     const type = this.filterType();
 
     if (community) {
-      posts = posts.filter((p) => p.community?.name?.toLowerCase().includes(community.toLowerCase()));
+      posts = posts.filter((p) => p.community?.community_name?.toLowerCase().includes(community.toLowerCase()));
     }
     if (type) {
       posts = posts.filter((p) => p.type === type);

@@ -22,6 +22,11 @@ export interface Country {
   country_flag: string;
 }
 
+export interface interests {
+  interest_id: number;
+  interest_name: string;
+}
+
 export interface User {
   id: string;
   email: string;
@@ -47,23 +52,36 @@ export interface User {
   updatedAt: string;
 }
 
+export interface CommunityRequest {
+  community_name: string;
+  description: string;
+  interest : number[];
+  is_private: boolean;
+  is_global: boolean;
+  is_default: boolean;
+  created_by: number;
+  profile_image_url?: string;
+  country_id: number;
+  rules: string[];
+}
+
 export interface Community {
-  id: string;
-  name: string;
-  description?: string;
-  image?: string;
-  location?: string;
-  pincode?: string;
-  isActive: boolean;
-  createdById: string;
-  createdBy?: User;
-  members?: CommunityMember[];
-  _count?: {
-    members: number;
-    posts: number;
-  };
-  createdAt: string;
-  updatedAt: string;
+community_id: number,
+community_name: string,
+description: string,
+profile_image_url: string,
+created_by: number,
+created_by_name: string,
+created_on: string,
+country_id: number,
+is_global: boolean,
+is_private: boolean,
+is_default: boolean,
+interests: number[],
+rules: string[],
+member_count: number,
+is_joined: boolean,
+total_count: number
 }
 
 export interface CommunityMember {

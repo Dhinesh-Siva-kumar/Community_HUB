@@ -219,11 +219,11 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
       next: (res) => {
         const userId = this.authService.currentUser()?.id;
         if (userId) {
-          const joined = res.data.filter(
-            (c) => c.members?.some((m) => m.userId === userId) || c.createdById === userId
-          );
-          this.joinedCommunities.set(joined);
-          this.loadPostsFromCommunities(joined);
+          // const joined = res.data.filter(
+          //   (c) => c.member_count?.((m) => m.userId === userId) || c.createdById === userId
+          // );
+          // this.joinedCommunities.set(joined);
+          // this.loadPostsFromCommunities(joined);
         } else {
           this.joinedCommunities.set(res.data);
           this.loadPostsFromCommunities(res.data);
@@ -245,7 +245,7 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
     }
 
     const requests = communities.map((c) =>
-      this.postService.getPosts(c.id, { limit: 10, status: 'APPROVED' }).pipe(
+      this.postService.getPosts(c.community_id, { limit: 10, status: 'APPROVED' }).pipe(
         catchError(() => of({ data: [], total: 0, page: 1, limit: 10, totalPages: 0 } as PaginatedResponse<Post>))
       )
     );

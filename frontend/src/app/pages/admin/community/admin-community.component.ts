@@ -5,7 +5,8 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { CommunityService } from '../../../core/services/community.service';
 import { ApiService } from '../../../core/services/api.service';
 import { ToastService } from '../../../core/services/toast.service';
-import { Community, PaginatedResponse } from '../../../core/models';
+import { Community, CommunityRequest, Country, interests, PaginatedResponse } from '../../../core/models';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-admin-community',
@@ -19,6 +20,10 @@ export class AdminCommunityComponent implements OnInit {
   private apiService = inject(ApiService);
   private toast = inject(ToastService);
   private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private toastService = inject(ToastService);
+  countries: Country[] = [];
+  interests: interests[] = [];
 
   // Signals
   communities = signal<Community[]>([]);
@@ -33,7 +38,7 @@ export class AdminCommunityComponent implements OnInit {
   editingCommunity = signal<Community | null>(null);
   selectedImage = signal<File | null>(null);
   imagePreview = signal<string | null>(null);
-  deleteConfirmId = signal<string | null>(null);
+  deleteConfirmId = signal<number | null>(null);
 
   // Computed
   filteredCommunities = computed(() => {
@@ -41,9 +46,8 @@ export class AdminCommunityComponent implements OnInit {
     if (!term) return this.communities();
     return this.communities().filter(
       (c) =>
-        c.name.toLowerCase().includes(term) ||
-        (c.description?.toLowerCase().includes(term)) ||
-        (c.location?.toLowerCase().includes(term))
+        c.community_name.toLowerCase().includes(term) ||
+        (c.description?.toLowerCase().includes(term))
     );
   });
 
@@ -55,24 +59,74 @@ export class AdminCommunityComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
+    this.loadCountries();
+    this.loadInterests();
     this.loadCommunities();
   }
 
   initForm(): void {
-    this.communityForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
-      description: ['', [Validators.maxLength(500)]],
-      location: ['', [Validators.maxLength(200)]],
-      pincode: ['', [Validators.pattern(/^\d{4,10}$/)]],
-    });
+  this.communityForm = this.fb.group({
+    coummunityName: ['',[Validators.required, Validators.minLength(3), Validators.maxLength(150)]],
+    interests: [null, Validators.required],
+    description: ['',[Validators.maxLength(500)]],
+    image: [null], // file or URL
+    isPrivate: [false],
+    isGlobal: [false],
+    isDefault: [false],
+    countryId: [null]
+  });
   }
+
+  get f() {
+  return this.communityForm.controls;
+  }
+
+loadCountries() {
+  this.authService.getCountries().subscribe({
+    next: (res) => {
+      this.countries = res.data;
+      const defaultCountry = this.countries.find(c => c.country_name === 'India');
+      if (defaultCountry) {
+        this.communityForm.patchValue({
+          countryID: defaultCountry.country_id
+        });
+        this.communityForm.get('mobile')?.updateValueAndValidity();
+      }
+    },
+    error: () => {
+      this.toastService.error('Failed to load countries');
+    }
+  });
+}
+
+loadInterests() {
+  this.authService.getInterests().subscribe({
+    next: (res) => {
+      this.interests = res.data;
+      const defaultInterest = this.interests.find(i => i.interest_name === 'Jobs');
+      if (defaultInterest) {
+        this.communityForm.patchValue({
+         interests : [defaultInterest.interest_id]
+        });
+      }
+    },
+    error: () => {
+      this.toastService.error('Failed to load countries');
+    }
+  });
+}
+
+  
 
   loadCommunities(): void {
     this.loading.set(true);
+    
     const params: Record<string, any> = {
+      user_id: this.authService.currentUser()?.id ?? 39,
       page: this.currentPage(),
       limit: this.pageSize(),
     };
+    console.log('Params:', params);
 
     this.communityService.getCommunities(params).subscribe({
       next: (response: PaginatedResponse<Community>) => {
@@ -104,12 +158,10 @@ export class AdminCommunityComponent implements OnInit {
   openEditModal(community: Community): void {
     this.editingCommunity.set(community);
     this.communityForm.patchValue({
-      name: community.name,
-      description: community.description || '',
-      location: community.location || '',
-      pincode: community.pincode || '',
+      communityName: community.community_name,
+      description: community.description
     });
-    this.imagePreview.set(community.image || null);
+    this.imagePreview.set(community.profile_image_url || null);
     this.selectedImage.set(null);
     this.showModal.set(true);
   }
@@ -149,11 +201,15 @@ export class AdminCommunityComponent implements OnInit {
     const formData = this.communityForm.value;
     const image = this.selectedImage();
 
+    const communityData = { ...this.communityForm.value };
+
+    const payload = this.mapToPayload(communityData);
+
     if (this.isEditing()) {
       const community = this.editingCommunity()!;
       if (image) {
         this.apiService.putWithFile<Community>(
-          `/communities/${community.id}`,
+          `/communities/${community.community_id}`,
           formData,
           [{ field: 'image', file: image }]
         ).subscribe({
@@ -169,7 +225,7 @@ export class AdminCommunityComponent implements OnInit {
           },
         });
       } else {
-        this.communityService.updateCommunity(community.id, formData).subscribe({
+        this.communityService.updateCommunity(community.community_id, formData).subscribe({
           next: () => {
             this.toast.success('Community updated successfully');
             this.closeModal();
@@ -201,7 +257,7 @@ export class AdminCommunityComponent implements OnInit {
           },
         });
       } else {
-        this.communityService.createCommunity(formData).subscribe({
+        this.communityService.createCommunity(payload).subscribe({
           next: () => {
             this.toast.success('Community created successfully');
             this.closeModal();
@@ -217,7 +273,7 @@ export class AdminCommunityComponent implements OnInit {
     }
   }
 
-  confirmDelete(id: string): void {
+  confirmDelete(id: number): void {
     this.deleteConfirmId.set(id);
   }
 
@@ -225,7 +281,7 @@ export class AdminCommunityComponent implements OnInit {
     this.deleteConfirmId.set(null);
   }
 
-  deleteCommunity(id: string): void {
+  deleteCommunity(id: number): void {
     this.communityService.deleteCommunity(id).subscribe({
       next: () => {
         this.toast.success('Community deleted successfully');
@@ -272,5 +328,20 @@ export class AdminCommunityComponent implements OnInit {
   truncate(text: string | undefined, length: number): string {
     if (!text) return '';
     return text.length > length ? text.substring(0, length) + '...' : text;
+  }
+
+  private mapToPayload(form: any): CommunityRequest {
+    return {
+      community_name: form.coummunityName,
+      interest: form.interests ? [Number(form.interests)] : [],
+      description: form.description,
+      is_private: form.isPrivate,
+      is_global: form.isGlobal,
+      is_default: form.isDefault,
+      country_id: form.countryId,
+      created_by: 39,
+      profile_image_url:'https://flagcdn.com/in.svg',
+      rules: []
+  };
   }
 }

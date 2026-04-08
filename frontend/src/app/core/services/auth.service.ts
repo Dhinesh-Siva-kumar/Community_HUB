@@ -38,6 +38,10 @@ export class AuthService {
       return this.http.get<any>(`${this.baseUrl}/master-data/countries`);
   }
 
+  getInterests() {
+      return this.http.get<any>(`${this.baseUrl}/master-data/interests`);
+  }
+
   checkUsername(username: string): Observable<any> {
   return this.http.get(`${this.baseUrl}/auth/check-username/${username}`);
   }

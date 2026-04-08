@@ -19,8 +19,8 @@
   <!-- Community Header with parallax & animated overlay -->
   <div class="community-header card border-0 shadow-sm mb-4 overflow-hidden header-entrance">
     <div class="header-banner">
-      @if (community()!.image) {
-        <img [src]="community()!.image" [alt]="community()!.name" class="banner-img" />
+      @if (community()!.profile_image_url) {
+        <img [src]="community()!.profile_image_url" [alt]="community()!.community_name" class="banner-img" />
       } @else {
         <div class="banner-placeholder">
           <!-- Community activity pattern behind header -->
@@ -34,8 +34,8 @@
     <div class="header-content p-4">
       <div class="d-flex flex-wrap align-items-end gap-3">
         <div class="community-avatar">
-          @if (community()!.image) {
-            <img [src]="community()!.image" [alt]="community()!.name" />
+          @if (community()!.profile_image_url) {
+            <img [src]="community()!.profile_image_url" [alt]="community()!.community_name" />
           } @else {
             <div class="avatar-placeholder d-flex align-items-center justify-content-center">
               <i class="bi bi-people-fill"></i>
@@ -43,7 +43,7 @@
           }
         </div>
         <div class="flex-grow-1">
-          <h4 class="fw-bold mb-1 text-dark">{{ community()!.name }}</h4>
+          <h4 class="fw-bold mb-1 text-dark">{{ community()!.community_name }}</h4>
           @if (community()!.description) {
             <p class="text-muted mb-2">{{ community()!.description }}</p>
           }
@@ -54,9 +54,9 @@
             <span class="badge bg-success bg-opacity-10 text-success">
               <i class="bi bi-file-earmark-text-fill me-1"></i>{{ postCount() }} posts
             </span>
-            @if (community()!.location) {
+            @if (community()!.country_id) {
               <span class="badge bg-secondary bg-opacity-10 text-secondary">
-                <i class="bi bi-geo-alt-fill me-1"></i>{{ community()!.location }}
+                <i class="bi bi-geo-alt-fill me-1"></i>{{ community()!.country_id }}
               </span>
             }
           </div>
@@ -646,26 +646,26 @@
                       </div>
                     </div>
 
-                    @if (community()!.location) {
+                    @if (community()!.country_id) {
                       <div class="info-item d-flex gap-3 mb-4 info-item-animate" style="animation-delay: 80ms;">
                         <div class="info-icon">
                           <i class="bi bi-geo-alt-fill"></i>
                         </div>
                         <div>
                           <label class="text-muted small fw-semibold d-block mb-1">Location</label>
-                          <p class="mb-0">{{ community()!.location }}</p>
+                          <p class="mb-0">{{ community()!.country_id }}</p>
                         </div>
                       </div>
                     }
 
-                    @if (community()!.pincode) {
+                    @if (community()!.country_id) {
                       <div class="info-item d-flex gap-3 mb-4 info-item-animate" style="animation-delay: 160ms;">
                         <div class="info-icon">
                           <i class="bi bi-mailbox"></i>
                         </div>
                         <div>
                           <label class="text-muted small fw-semibold d-block mb-1">Pincode</label>
-                          <p class="mb-0">{{ community()!.pincode }}</p>
+                          <p class="mb-0">{{ community()!.country_id }}</p>
                         </div>
                       </div>
                     }
@@ -676,7 +676,7 @@
                       </div>
                       <div>
                         <label class="text-muted small fw-semibold d-block mb-1">Created</label>
-                        <p class="mb-0">{{ formatDate(community()!.createdAt) }}</p>
+                        <p class="mb-0">{{ formatDate(community()!.created_on) }}</p>
                       </div>
                     </div>
 

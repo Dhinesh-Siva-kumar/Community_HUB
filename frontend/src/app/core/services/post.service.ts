@@ -7,11 +7,11 @@ import { Post, Comment, PaginatedResponse, PostType } from '../models';
 export class PostService {
   private api = inject(ApiService);
 
-  getPosts(communityId: string, params?: Record<string, any>): Observable<PaginatedResponse<Post>> {
+  getPosts(communityId: number, params?: Record<string, any>): Observable<PaginatedResponse<Post>> {
     return this.api.get<PaginatedResponse<Post>>(`/communities/${communityId}/posts`, params);
   }
 
-  createPost(communityId: string, data: { content: string; type: PostType }, images?: File[]): Observable<Post> {
+  createPost(communityId: number, data: { content: string; type: PostType }, images?: File[]): Observable<Post> {
     if (images && images.length > 0) {
       const files = images.map((file, index) => ({ field: 'images', file }));
       return this.api.postWithFile<Post>(`/communities/${communityId}/posts`, data, files);

@@ -65,28 +65,28 @@
     </div>
   } @else {
     <div class="row g-3 mb-4">
-      @for (community of filteredCommunities(); track community.id) {
+      @for (community of filteredCommunities(); track community.community_id) {
         <div class="col-12 col-md-6 col-lg-4">
           <div class="card community-card border-0 shadow-sm h-100">
             <!-- Card Image -->
             <div class="card-img-top-wrapper">
-              @if (community.image) {
-                <img [src]="community.image" [alt]="community.name" class="card-img-top" />
+              @if (community.profile_image_url) {
+                <img [src]="community.profile_image_url" [alt]="community.community_name" class="card-img-top" />
               } @else {
                 <div class="card-img-placeholder d-flex align-items-center justify-content-center">
                   <i class="bi bi-people-fill"></i>
                 </div>
               }
               <!-- Status Badge -->
-              <span class="status-badge badge" [class.bg-success]="community.isActive" [class.bg-secondary]="!community.isActive">
-                {{ community.isActive ? 'Active' : 'Inactive' }}
+              <span class="status-badge badge" [class.bg-success]="community.is_global" [class.bg-secondary]="!community.is_global">
+                {{ community.is_global ? 'Active' : 'Inactive' }}
               </span>
             </div>
 
             <!-- Card Body -->
             <div class="card-body d-flex flex-column">
-              <a [routerLink]="['/admin/community', community.id]" class="text-decoration-none">
-                <h6 class="fw-bold text-dark mb-1">{{ community.name }}</h6>
+              <a [routerLink]="['/admin/community', community.community_id]" class="text-decoration-none">
+                <h6 class="fw-bold text-dark mb-1">{{ community.community_name }}</h6>
               </a>
               <p class="text-muted small mb-3 flex-grow-1">{{ truncate(community.description, 100) }}</p>
 
@@ -94,47 +94,47 @@
               <div class="d-flex gap-3 mb-3">
                 <div class="stat-item d-flex align-items-center gap-1">
                   <i class="bi bi-people text-primary"></i>
-                  <span class="small fw-semibold">{{ community._count?.members ?? 0 }}</span>
+                  <span class="small fw-semibold">{{ community?.total_count ?? 0 }}</span>
                   <span class="small text-muted">members</span>
                 </div>
                 <div class="stat-item d-flex align-items-center gap-1">
                   <i class="bi bi-file-earmark-text text-success"></i>
-                  <span class="small fw-semibold">{{ community._count?.posts ?? 0 }}</span>
+                  <span class="small fw-semibold">{{ community?.total_count ?? 0 }}</span>
                   <span class="small text-muted">posts</span>
                 </div>
               </div>
 
               <!-- Location & Date -->
-              @if (community.location) {
+              @if (community.country_id) {
                 <div class="mb-2">
                   <span class="small text-muted">
-                    <i class="bi bi-geo-alt me-1"></i>{{ community.location }}
+                    <i class="bi bi-geo-alt me-1"></i>{{ community.country_id }}
                   </span>
                 </div>
               }
               <div class="mb-3">
                 <span class="small text-muted">
-                  <i class="bi bi-calendar3 me-1"></i>Created {{ formatDate(community.createdAt) }}
+                  <i class="bi bi-calendar3 me-1"></i>Created {{ formatDate(community.created_on) }}
                 </span>
               </div>
 
               <!-- Action Buttons -->
               <div class="d-flex gap-2">
-                <a [routerLink]="['/admin/community', community.id]" class="btn btn-sm btn-outline-primary flex-grow-1">
+                <a [routerLink]="['/admin/community', community.community_id]" class="btn btn-sm btn-outline-primary flex-grow-1">
                   <i class="bi bi-eye me-1"></i>View
                 </a>
                 <button class="btn btn-sm btn-outline-secondary" (click)="openEditModal(community)">
                   <i class="bi bi-pencil"></i>
                 </button>
-                @if (deleteConfirmId() === community.id) {
-                  <button class="btn btn-sm btn-danger" (click)="deleteCommunity(community.id)">
+                @if (deleteConfirmId() === community.community_id) {
+                  <button class="btn btn-sm btn-danger" (click)="deleteCommunity(community.community_id)">
                     <i class="bi bi-check-lg"></i>
                   </button>
                   <button class="btn btn-sm btn-outline-secondary" (click)="cancelDelete()">
                     <i class="bi bi-x-lg"></i>
                   </button>
                 } @else {
-                  <button class="btn btn-sm btn-outline-danger" (click)="confirmDelete(community.id)">
+                  <button class="btn btn-sm btn-outline-danger" (click)="confirmDelete(community.community_id)">
                     <i class="bi bi-trash"></i>
                   </button>
                 }
@@ -174,7 +174,7 @@
 @if (showModal()) {
   <div class="modal-backdrop fade show" (click)="closeModal()"></div>
   <div class="modal fade show d-block" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content border-0 shadow">
         <!-- Modal Header -->
         <div class="modal-header border-0 pb-0">
@@ -184,99 +184,196 @@
 
         <!-- Modal Body -->
         <div class="modal-body">
-          <form [formGroup]="communityForm" (ngSubmit)="submitForm()">
-            <!-- Name -->
-            <div class="mb-3">
-              <label class="form-label fw-semibold small">Community Name <span class="text-danger">*</span></label>
-              <input
-                type="text"
-                class="form-control"
-                formControlName="name"
-                placeholder="Enter community name"
-                [class.is-invalid]="communityForm.get('name')?.touched && communityForm.get('name')?.invalid"
-              />
-              @if (communityForm.get('name')?.touched && communityForm.get('name')?.errors) {
-                <div class="invalid-feedback">
-                  @if (communityForm.get('name')?.errors?.['required']) {
-                    Community name is required.
-                  } @else if (communityForm.get('name')?.errors?.['minlength']) {
-                    Name must be at least 3 characters.
-                  } @else if (communityForm.get('name')?.errors?.['maxlength']) {
-                    Name must be less than 100 characters.
-                  }
-                </div>
-              }
-            </div>
+          <form
+  [formGroup]="communityForm"
+  (ngSubmit)="submitForm()"
+  class="auth-form"
+>
 
-            <!-- Description -->
-            <div class="mb-3">
-              <label class="form-label fw-semibold small">Description</label>
-              <textarea
-                class="form-control"
-                formControlName="description"
-                rows="3"
-                placeholder="Describe this community"
-                [class.is-invalid]="communityForm.get('description')?.touched && communityForm.get('description')?.invalid"
-              ></textarea>
-              @if (communityForm.get('description')?.touched && communityForm.get('description')?.errors?.['maxlength']) {
-                <div class="invalid-feedback">Description must be less than 500 characters.</div>
-              }
-            </div>
+  <!-- Community Name -->
+  <div class="field-row">
+    <!-- Coummunity Name -->
+    <div class="field-group">
+      <label class="field-label">Community Name</label>
+      <div class="field-input-wrap">
+        <i class="bi bi-people field-icon"></i>
+        <input
+          type="text"
+          formControlName="coummunityName"
+          maxlength="150"
+          placeholder="Enter community name"
+          class="field-input"
+          [class.is-invalid]="f['coummunityName'].touched && f['coummunityName'].invalid"
+        />
+      </div>
 
-            <!-- Location -->
-            <div class="mb-3">
-              <label class="form-label fw-semibold small">Location</label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="location"
-                  placeholder="e.g. London, UK"
-                />
-              </div>
-            </div>
+      @if (f["coummunityName"].touched && f["coummunityName"].invalid) {
+        <div class="field-error">
+          @if (f["coummunityName"].errors?.["required"]) {
+            Community Name is required.
+          } @else if (f["coummunityName"].errors?.["minlength"]) {
+            Minimum 3 characters required.
+          } @else if (f["coummunityName"].errors?.["maxlength"]) {
+            Maximum 150 characters allowed.
+          }
+        </div>
+      }
+    </div>
 
-            <!-- Pincode -->
-            <div class="mb-3">
-              <label class="form-label fw-semibold small">Pincode</label>
-              <input
-                type="text"
-                class="form-control"
-                formControlName="pincode"
-                placeholder="Enter pincode"
-                [class.is-invalid]="communityForm.get('pincode')?.touched && communityForm.get('pincode')?.invalid"
-              />
-              @if (communityForm.get('pincode')?.touched && communityForm.get('pincode')?.errors?.['pattern']) {
-                <div class="invalid-feedback">Enter a valid pincode (4-10 digits).</div>
-              }
-            </div>
+    <!-- Category -->
+    <div class="field-group">
+      <label class="field-label">Category</label>
+      <div class="field-input-wrap">
+        <i class="bi bi-bookmark-star field-icon"></i>
+        <select
+          formControlName="interests"
+          class="field-input field-select"
+        >
+          <option>Select Category</option>
+          <option *ngFor="let i of interests" [value]="i.interest_id">
+            {{ i.interest_name }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
 
-            <!-- Image Upload -->
-            <div class="mb-3">
-              <label class="form-label fw-semibold small">Community Image</label>
-              @if (imagePreview()) {
-                <div class="image-preview-wrapper mb-2 position-relative">
-                  <img [src]="imagePreview()" alt="Preview" class="img-fluid rounded" />
-                  <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1" (click)="removeImage()">
-                    <i class="bi bi-x-lg"></i>
-                  </button>
-                </div>
-              } @else {
-                <div class="upload-area text-center p-4 rounded border border-dashed" (click)="imageInput.click()">
-                  <i class="bi bi-cloud-upload fs-3 text-muted"></i>
-                  <p class="text-muted small mb-0 mt-1">Click to upload an image</p>
-                </div>
-              }
-              <input
-                #imageInput
-                type="file"
-                class="d-none"
-                accept="image/*"
-                (change)="onImageSelect($event)"
-              />
-            </div>
-          </form>
+  <!-- Description -->
+  <div class="field-group">
+    <label class="field-label">Description</label>
+    <div class="field-input-wrap">
+      <i class="bi bi-card-text field-icon"></i>
+      <textarea
+        formControlName="description"
+        rows="3"
+        maxlength="500"
+        placeholder="Describe your community"
+        class="field-input"
+        [class.is-invalid]="f['description'].touched && f['description'].invalid"
+      ></textarea>
+    </div>
+
+    @if (f["description"].touched && f["description"].errors?.["maxlength"]) {
+      <div class="field-error">
+        Maximum 500 characters allowed.
+      </div>
+    }
+  </div>
+
+  <!-- Country + Pincode -->
+  <div class="field-row">
+        <div class="d-flex flex-wrap gap-4 mt-2">
+
+  <!-- Private -->
+  <div class="form-check form-switch">
+    <input
+      class="form-check-input"
+      type="checkbox"
+      role="switch"
+      formControlName="isPrivate"
+      id="isPrivate"
+    />
+    <label class="form-check-label" for="isPrivate">
+      Private
+    </label>
+  </div>
+
+  <!-- Global -->
+  <div class="form-check form-switch">
+    <input
+      class="form-check-input"
+      type="checkbox"
+      role="switch"
+      formControlName="isGlobal"
+      id="isGlobal"
+    />
+    <label class="form-check-label" for="isGlobal">
+      Global
+    </label>
+  </div>
+
+  <!-- Default -->
+  <div class="form-check form-switch">
+    <input
+      class="form-check-input"
+      type="checkbox"
+      role="switch"
+      formControlName="isDefault"
+      id="isDefault"
+    />
+    <label class="form-check-label" for="isDefault">
+      Default
+    </label>
+  </div>
+
+</div>
+    <!-- Country -->
+    <div class="field-group">
+      <label class="field-label">Country</label>
+      <div class="field-input-wrap">
+        <i class="bi bi-globe field-icon"></i>
+        <select
+          formControlName="countryId"
+          class="field-input field-select"
+        >
+          <option value="">Select country</option>
+          <option *ngFor="let c of countries" [value]="c.country_id">
+            {{ c.country_name }}
+          </option>
+        </select>
+      </div>
+    </div>
+    
+  </div>
+
+  <!-- Image Upload -->
+  <div class="field-group">
+    <label class="field-label">Community Image</label>
+
+    @if (imagePreview()) {
+      <div class="position-relative mt-2">
+        <img [src]="imagePreview()" class="img-fluid rounded" />
+        <button
+          type="button"
+          class="btn btn-danger btn-sm position-absolute top-0 end-0"
+          (click)="removeImage()"
+        >
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+    } @else {
+      <div class="field-input-wrap upload-box" (click)="imageInput.click()">
+        <i class="bi bi-cloud-upload field-icon"></i>
+        <span class="text-muted">Click to upload image</span>
+      </div>
+    }
+
+    <input
+      #imageInput
+      type="file"
+      hidden
+      accept="image/*"
+      (change)="onImageSelect($event)"
+    />
+  </div>
+
+  <!-- Submit -->
+  <div class="btn-row">
+    <button
+      type="submit"
+      class="submit-btn"
+      [disabled]="communityForm.invalid || submitting()"
+    >
+      @if (submitting()) {
+        {{ isEditing() ? 'Updating...' : 'Creating...' }}
+      } @else {
+        {{ isEditing() ? 'Update Community' : 'Create Community' }}
+        <i class="bi bi-arrow-right ms-1"></i>
+      }
+    </button>
+  </div>
+
+</form>
         </div>
 
         <!-- Modal Footer -->

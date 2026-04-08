@@ -30,11 +30,11 @@ export class UserCommunityComponent implements OnInit {
   totalPages = signal(1);
   totalItems = signal(0);
   pageSize = signal(9);
-  joiningId = signal<string | null>(null);
-  leavingId = signal<string | null>(null);
+  joiningId = signal<number | null>(null);
+  leavingId = signal<number | null>(null);
 
   // Track which communities the user has joined
-  joinedCommunityIds = signal<Set<string>>(new Set());
+  joinedCommunityIds = signal<Set<number>>(new Set());
 
   // Computed
   filteredCommunities = computed(() => {
@@ -42,10 +42,8 @@ export class UserCommunityComponent implements OnInit {
     if (!term) return this.communities();
     return this.communities().filter(
       (c) =>
-        c.name.toLowerCase().includes(term) ||
-        (c.description?.toLowerCase().includes(term)) ||
-        (c.location?.toLowerCase().includes(term))
-    );
+        c.community_name.toLowerCase().includes(term) ||
+        (c.description?.toLowerCase().includes(term)) );
   });
 
   currentUserId = computed(() => this.authService.currentUser()?.id ?? '');
@@ -57,6 +55,7 @@ export class UserCommunityComponent implements OnInit {
   loadCommunities(): void {
     this.loading.set(true);
     const params: Record<string, any> = {
+      user_id: this.authService.currentUser()?.id ?? 39,
       page: this.currentPage(),
       limit: this.pageSize(),
     };
@@ -78,16 +77,16 @@ export class UserCommunityComponent implements OnInit {
 
   private updateJoinedStatus(communities: Community[]): void {
     const userId = this.currentUserId();
-    const joinedIds = new Set<string>();
+    const joinedIds = new Set<number>();
     communities.forEach((community) => {
-      if (community.members?.some((m) => m.userId === userId)) {
-        joinedIds.add(community.id);
-      }
+      // if (community.member_count?.some((m) => m.userId === userId)) {
+      //   joinedIds.add(community.community_id);
+      // }
     });
     this.joinedCommunityIds.set(joinedIds);
   }
 
-  isJoined(communityId: string): boolean {
+  isJoined(communityId: number): boolean {
     return this.joinedCommunityIds().has(communityId);
   }
 
@@ -96,11 +95,15 @@ export class UserCommunityComponent implements OnInit {
     this.searchTerm.set(value);
   }
 
-  joinCommunity(event: Event, communityId: string): void {
+  joinCommunity(event: Event, communityId: number): void {
     event.stopPropagation();
     this.joiningId.set(communityId);
+    const payload = {
+      community_id: communityId,
+      user_id: this.currentUserId()
+    }
 
-    this.communityService.joinCommunity(communityId).subscribe({
+    this.communityService.joinCommunity(payload).subscribe({
       next: () => {
         this.toast.success('Successfully joined the community!');
         this.joinedCommunityIds.update((ids) => {
@@ -111,11 +114,12 @@ export class UserCommunityComponent implements OnInit {
         // Update member count locally
         this.communities.update((communities) =>
           communities.map((c) =>
-            c.id === communityId
-              ? { ...c, _count: { ...c._count!, members: (c._count?.members ?? 0) + 1, posts: c._count?.posts ?? 0 } }
+            c.community_id == communityId
+              ? c
               : c
           )
         );
+        this.loadCommunities();
         this.joiningId.set(null);
       },
       error: () => {
@@ -125,7 +129,7 @@ export class UserCommunityComponent implements OnInit {
     });
   }
 
-  leaveCommunity(event: Event, communityId: string): void {
+  leaveCommunity(event: Event, communityId: number): void {
     event.stopPropagation();
     this.leavingId.set(communityId);
 
@@ -140,8 +144,8 @@ export class UserCommunityComponent implements OnInit {
         // Update member count locally
         this.communities.update((communities) =>
           communities.map((c) =>
-            c.id === communityId
-              ? { ...c, _count: { ...c._count!, members: Math.max(0, (c._count?.members ?? 0) - 1), posts: c._count?.posts ?? 0 } }
+            c.community_id === communityId
+              ? c
               : c
           )
         );

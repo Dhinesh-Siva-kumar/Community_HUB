@@ -119,8 +119,8 @@
               <div class="flex-grow-1">
                 <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
                   <span class="fw-semibold small">{{ post.user?.firstName }} {{ post.user?.lastName }}</span>
-                  @if (post.community?.name) {
-                    <span class="text-muted small">in <strong>{{ post.community?.name }}</strong></span>
+                  @if (post.community?.community_name) {
+                    <span class="text-muted small">in <strong>{{ post.community?.community_name }}</strong></span>
                   }
                   <span class="badge" [ngClass]="getPostTypeBadge(post.type).class">
                     {{ getPostTypeBadge(post.type).label }}

@@ -186,7 +186,7 @@
                     </span>
                     <span class="post-community-name">
                       <i class="bi bi-people-fill"></i>
-                      {{ post.community?.name ?? 'Community' }}
+                      {{ post.community?.community_name ?? 'Community' }}
                     </span>
                   </div>
                 </div>
@@ -265,11 +265,11 @@
       </div>
     } @else {
       <div class="communities-scroll">
-        @for (community of joinedCommunities(); track community.id) {
+        @for (community of joinedCommunities(); track community.community_id) {
           <a [routerLink]="['/user/community']" class="community-card">
             <div class="community-card-img">
-              @if (community.image) {
-                <img [src]="community.image" [alt]="community.name" />
+              @if (community.profile_image_url) {
+                <img [src]="community.profile_image_url" [alt]="community.community_name" />
               } @else {
                 <div class="community-card-placeholder">
                   <i class="bi bi-people-fill"></i>
@@ -277,10 +277,10 @@
               }
             </div>
             <div class="community-card-body">
-              <h6 class="community-card-name">{{ community.name }}</h6>
+              <h6 class="community-card-name">{{ community.community_name }}</h6>
               <div class="community-card-stats">
-                <span><i class="bi bi-person"></i> {{ community._count?.members ?? 0 }}</span>
-                <span><i class="bi bi-chat-left-text"></i> {{ community._count?.posts ?? 0 }}</span>
+                <span><i class="bi bi-person"></i> {{ community?.member_count ?? 0 }}</span>
+                <span><i class="bi bi-chat-left-text"></i> {{ community?.member_count ?? 0 }}</span>
               </div>
             </div>
           </a>

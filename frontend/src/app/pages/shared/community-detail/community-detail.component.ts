@@ -35,7 +35,7 @@ export class CommunityDetailComponent implements OnInit {
   loading = signal(true);
   loadingPosts = signal(false);
   activeTab = signal<TabType>('posts');
-  communityId = signal<string>('');
+  communityId = signal<number>(0);
   tabTransition = signal(false);
 
   // Post creation
@@ -85,8 +85,8 @@ export class CommunityDetailComponent implements OnInit {
     }
   });
 
-  memberCount = computed(() => this.community()?._count?.members ?? 0);
-  postCount = computed(() => this.community()?._count?.posts ?? 0);
+  memberCount = computed(() => this.community()?.member_count ?? 0);
+  postCount = computed(() => this.community()?.member_count ?? 0);
 
   ngOnInit(): void {
     this.initForms();
