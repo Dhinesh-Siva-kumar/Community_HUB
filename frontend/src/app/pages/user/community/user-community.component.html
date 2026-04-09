@@ -1,147 +1,148 @@
 <!-- Loading State -->
 @if (loading()) {
-  <div class="d-flex justify-content-center align-items-center py-5">
-    <div class="text-center">
-      <div class="spinner-border text-primary mb-3" role="status">
-        <span class="visually-hidden">Loading...</span>
+  <div class="page-loading">
+    <div class="page-loading-inner">
+      <div class="page-loading-spinner">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
       </div>
-      <p class="text-muted">Loading communities...</p>
+      <p class="page-loading-text">Loading communities...</p>
     </div>
   </div>
 } @else {
-  <!-- Page Header with SVG Banner -->
-  <div class="page-header mb-4">
-    <div class="page-header-bg">
-      <app-people-connection width="600" height="300"></app-people-connection>
-    </div>
-    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 position-relative">
-      <div class="header-text-entrance">
-        <h4 class="fw-bold mb-1">Communities</h4>
-        <p class="text-muted mb-0">Discover and join communities near you</p>
+
+  <!-- ── Page Header ──────────────────────────────────────── -->
+  <div class="page-header">
+    <div class="page-header-content">
+      <div class="page-header-icon">
+        <i class="bi bi-people-fill"></i>
       </div>
-      <div class="d-flex align-items-center gap-3">
-        <div class="header-illustration d-none d-md-block">
-          <app-community-activity width="100" height="100"></app-community-activity>
-        </div>
-        <span class="badge bg-primary bg-opacity-10 text-primary fs-6 pulse-glow">
-          <i class="bi bi-people-fill me-1"></i>{{ totalItems() }} communities
-        </span>
+      <div>
+        <h4 class="page-title">Communities</h4>
+        <p class="page-subtitle">Discover and join communities near you</p>
       </div>
     </div>
   </div>
 
-  <!-- Search Bar -->
-  <div class="row mb-4 search-entrance">
-    <div class="col-md-6 col-lg-5">
-      <div class="input-group search-group">
-        <span class="input-group-text bg-white border-end-0">
-          <i class="bi bi-search text-muted"></i>
-        </span>
-        <input
-          type="text"
-          class="form-control border-start-0 ps-0"
-          placeholder="Search communities by name, location..."
-          [value]="searchTerm()"
-          (input)="onSearch($event)"
-        />
-      </div>
+  <!-- ── Toolbar ───────────────────────────────────────────── -->
+  <div class="page-toolbar">
+    <div class="page-search-wrap">
+      <i class="bi bi-search page-search-icon"></i>
+      <input
+        type="text"
+        class="page-search-input"
+        placeholder="Search communities..."
+        [value]="searchTerm()"
+        (input)="onSearch($event)"
+      />
     </div>
+    <span class="page-count-badge">
+      <i class="bi bi-grid-3x3-gap-fill me-1"></i>
+      {{ totalItems() }} {{ totalItems() === 1 ? 'community' : 'communities' }}
+    </span>
   </div>
 
-  <!-- Community Cards Grid -->
+  <!-- ── Empty State ───────────────────────────────────────── -->
   @if (filteredCommunities().length === 0) {
-    <div class="empty-state text-center py-5">
-      <div class="empty-icon mb-3">
-        <!-- Animated search person SVG -->
-        <svg width="80" height="80" viewBox="0 0 80 80" fill="none" class="empty-search-svg">
-          <circle cx="35" cy="35" r="20" stroke="#4f46e5" stroke-width="3" fill="#eef2ff" class="search-circle" />
-          <line x1="50" y1="50" x2="65" y2="65" stroke="#4f46e5" stroke-width="4" stroke-linecap="round" class="search-handle" />
-          <circle cx="30" cy="32" r="2" fill="#4f46e5" />
-          <circle cx="40" cy="32" r="2" fill="#4f46e5" />
-          <path d="M28 39 Q35 44 42 39" stroke="#4f46e5" stroke-width="2" fill="none" stroke-linecap="round" />
-        </svg>
+    <div class="page-empty">
+      <div class="page-empty-icon">
+        <i class="bi bi-people"></i>
       </div>
-      <h5 class="fw-bold text-dark">No communities found</h5>
-      <p class="text-muted">
+      <h5 class="page-empty-title">
+        {{ searchTerm() ? 'No results found' : 'No communities yet' }}
+      </h5>
+      <p class="page-empty-text">
         @if (searchTerm()) {
-          No communities match your search. Try a different term.
+          No communities match "<strong>{{ searchTerm() }}</strong>". Try a different term.
         } @else {
           There are no communities available at the moment. Check back later!
         }
       </p>
     </div>
+
   } @else {
-    <div class="row g-3 mb-4">
-      @for (community of filteredCommunities(); track community.community_id; let i = $index) {
-        <div class="col-12 col-md-6 col-lg-4" appAnimateOnScroll>
-          <div class="card community-card border-0 shadow-sm h-100 fade-in-up {{ getStaggerClass(i) }}" (click)="navigateToCommunity(community.community_id.toString())" role="button">
-            <!-- Card Image -->
-            <div class="card-img-top-wrapper">
+
+    <!-- ── Cards Grid ───────────────────────────────────────── -->
+    <div class="row g-4 mb-2">
+      @for (community of filteredCommunities(); track community.community_id) {
+        <div class="col-12 col-md-6 col-xl-4">
+          <div class="community-card h-100" (click)="navigateToCommunity(community.community_id.toString())" role="button">
+
+            <!-- Cover Image -->
+            <div class="cc-cover">
               @if (community.profile_image_url) {
-                <img [src]="community.profile_image_url" [alt]="community.community_name" class="card-img-top" />
+                <img [src]="community.profile_image_url" [alt]="community.community_name" class="cc-cover-img" />
               } @else {
-                <div class="card-img-placeholder d-flex align-items-center justify-content-center">
+                <div class="cc-cover-placeholder">
                   <i class="bi bi-people-fill"></i>
-                  <!-- Faint people connection pattern overlay -->
-                  <div class="card-pattern-overlay">
-                    <svg width="100%" height="100%" viewBox="0 0 300 160" fill="none" preserveAspectRatio="xMidYMid slice">
-                      <circle cx="60" cy="40" r="8" fill="rgba(255,255,255,0.1)" />
-                      <circle cx="150" cy="80" r="10" fill="rgba(255,255,255,0.08)" />
-                      <circle cx="240" cy="50" r="7" fill="rgba(255,255,255,0.1)" />
-                      <circle cx="100" cy="120" r="6" fill="rgba(255,255,255,0.08)" />
-                      <circle cx="200" cy="130" r="9" fill="rgba(255,255,255,0.1)" />
-                      <line x1="60" y1="40" x2="150" y2="80" stroke="rgba(255,255,255,0.06)" stroke-width="1" />
-                      <line x1="150" y1="80" x2="240" y2="50" stroke="rgba(255,255,255,0.06)" stroke-width="1" />
-                      <line x1="100" y1="120" x2="200" y2="130" stroke="rgba(255,255,255,0.06)" stroke-width="1" />
-                      <line x1="150" y1="80" x2="100" y2="120" stroke="rgba(255,255,255,0.06)" stroke-width="1" />
-                    </svg>
-                  </div>
                 </div>
               }
-              <!-- Joined Badge -->
-              @if (isJoined(community.community_id)) {
-                <span class="joined-badge badge bg-success">
-                  <i class="bi bi-check-circle-fill me-1"></i>Joined
+              <!-- Badges overlay -->
+              <div class="cc-badges">
+                <!-- <span class="cc-badge" [class.cc-badge-global]="community.is_global" [class.cc-badge-inactive]="!community.is_global">
+                  <i class="bi me-1" [class.bi-globe2]="community.is_global" [class.bi-lock-fill]="!community.is_global"></i>
+                  {{ community.is_global ? 'Global' : 'Private' }}
                 </span>
-              }
+                @if (community.is_default) {
+                  <span class="cc-badge cc-badge-default">
+                    <i class="bi bi-star-fill me-1"></i>Default
+                  </span>
+                } -->
+                @if (community.is_joined || isJoined(community.community_id)) {
+                  <span class="cc-badge cc-badge-joined">
+                    <i class="bi bi-check-circle-fill me-1"></i>Joined
+                  </span>
+                }
+              </div>
             </div>
 
-            <!-- Card Body -->
-            <div class="card-body d-flex flex-column">
-              <h6 class="fw-bold text-dark mb-1">{{ community.community_name }}</h6>
-              <p class="text-muted small mb-3 flex-grow-1">{{ truncate(community.description, 120) }}</p>
+            <!-- Body -->
+            <div class="cc-body">
+              <span class="cc-name">
+                {{ community.community_name }}
+              </span>
+              <p class="cc-desc">{{ truncate(community.description, 110) }}</p>
 
               <!-- Stats -->
-              <div class="d-flex align-items-center gap-3 mb-3">
-                <div class="d-flex align-items-center gap-1">
-                  <i class="bi bi-people text-primary small"></i>
-                  <span class="small fw-semibold">{{ community?.member_count ?? 0 }}</span>
-                  <span class="small text-muted">members</span>
-                </div>
+              <div class="cc-stats">
+                <span class="cc-stat">
+                  <i class="bi bi-people-fill cc-stat-icon cc-stat-members"></i>
+                  <span class="cc-stat-value">{{ community?.member_count ?? 0 }}</span>
+                  <span class="cc-stat-label">members</span>
+                </span>
+              </div>
+
+              <!-- Meta -->
+              <div class="cc-meta">
                 @if (community.country_id) {
-                  <div class="d-flex align-items-center gap-1">
-                    <i class="bi bi-geo-alt text-danger small"></i>
-                    <span class="small text-muted">{{ community.country_id }}</span>
-                  </div>
+                  <span class="cc-meta-item">
+                    <i class="bi bi-geo-alt-fill"></i>{{ community.country_id }}
+                  </span>
+                }
+                @if (community.created_on) {
+                  <span class="cc-meta-item">
+                    <i class="bi bi-calendar3"></i>{{ formatDate(community.created_on) }}
+                  </span>
                 }
               </div>
 
-              <!-- Join / Leave Button -->
-              <div class="mt-auto">
-                @if (community.is_joined) {
+              <!-- Join / Leave Action -->
+              <div class="cc-actions">
+                @if (community.is_joined || isJoined(community.community_id)) {
                   <button
-                    class="btn btn-outline-danger btn-sm w-100 btn-ripple"
+                    class="cc-btn-leave"
                     (click)="joinCommunity($event, community.community_id)"
                   >
                     @if (leavingId() === community.community_id) {
                       <span class="spinner-border spinner-border-sm me-1"></span>Leaving...
                     } @else {
-                      <i class="bi bi-box-arrow-right me-1"></i>Leave Community
+                      <i class="bi bi-box-arrow-right me-1"></i>Leave
                     }
                   </button>
                 } @else {
                   <button
-                    class="btn btn-primary btn-sm w-100 btn-ripple"
+                    class="cc-btn-join"
                     [disabled]="joiningId() === community.community_id"
                     (click)="joinCommunity($event, community.community_id)"
                   >
@@ -154,15 +155,16 @@
                 }
               </div>
             </div>
+
           </div>
         </div>
       }
     </div>
 
-    <!-- Pagination -->
+    <!-- ── Pagination ────────────────────────────────────────── -->
     @if (totalPages() > 1) {
-      <nav class="d-flex justify-content-center">
-        <ul class="pagination pagination-sm">
+      <nav class="page-pagination">
+        <ul class="pagination pagination-sm mb-0">
           <li class="page-item" [class.disabled]="currentPage() === 1">
             <button class="page-link" (click)="goToPage(currentPage() - 1)">
               <i class="bi bi-chevron-left"></i>
@@ -181,5 +183,6 @@
         </ul>
       </nav>
     }
+
   }
 }

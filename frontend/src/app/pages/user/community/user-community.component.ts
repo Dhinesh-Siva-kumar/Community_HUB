@@ -5,14 +5,11 @@ import { CommunityService } from '../../../core/services/community.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { Community, PaginatedResponse } from '../../../core/models';
-import { AnimateOnScrollDirective } from '../../../shared/directives/animate-on-scroll.directive';
-import { CommunityActivityComponent } from '../../../shared/components/svg-illustrations/community-activity.component';
-import { PeopleConnectionComponent } from '../../../shared/components/svg-illustrations/people-connection.component';
 
 @Component({
   selector: 'app-user-community',
   standalone: true,
-  imports: [CommonModule, AnimateOnScrollDirective, CommunityActivityComponent, PeopleConnectionComponent],
+  imports: [CommonModule],
   templateUrl: './user-community.component.html',
   styleUrls: ['./user-community.component.scss'],
 })
@@ -76,7 +73,6 @@ export class UserCommunityComponent implements OnInit {
   }
 
   private updateJoinedStatus(communities: Community[]): void {
-    const userId = this.currentUserId();
     const joinedIds = new Set<number>();
     communities.forEach((community) => {
       // if (community.member_count?.some((m) => m.userId === userId)) {
@@ -111,14 +107,6 @@ export class UserCommunityComponent implements OnInit {
           newIds.add(communityId);
           return newIds;
         });
-        // Update member count locally
-        this.communities.update((communities) =>
-          communities.map((c) =>
-            c.community_id == communityId
-              ? c
-              : c
-          )
-        );
         this.loadCommunities();
         this.joiningId.set(null);
       },
@@ -141,14 +129,6 @@ export class UserCommunityComponent implements OnInit {
           newIds.delete(communityId);
           return newIds;
         });
-        // Update member count locally
-        this.communities.update((communities) =>
-          communities.map((c) =>
-            c.community_id === communityId
-              ? c
-              : c
-          )
-        );
         this.leavingId.set(null);
       },
       error: () => {
@@ -184,12 +164,16 @@ export class UserCommunityComponent implements OnInit {
     return pages;
   }
 
+  formatDate(dateStr: string): string {
+    return new Date(dateStr).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  }
+
   truncate(text: string | undefined, length: number): string {
     if (!text) return '';
     return text.length > length ? text.substring(0, length) + '...' : text;
-  }
-
-  getStaggerClass(index: number): string {
-    return `stagger-${Math.min((index % 6) + 1, 6)}`;
   }
 }
