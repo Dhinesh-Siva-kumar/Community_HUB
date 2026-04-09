@@ -24,8 +24,8 @@ export class CommunityService {
     return this.http.post<Community>(`${this.baseUrl}/create-community`, data).pipe();
   }
 
-  updateCommunity(id: number, data: Partial<Community>): Observable<Community> {
-    return this.api.put<Community>(`/communities/${id}`, data);
+  updateCommunity(data: Partial<CommunityRequest>): Observable<Community> {
+    return this.http.put<Community>(`${this.baseUrl}/update-community`, data);
   }
 
   deleteCommunity(id: number): Observable<void> {

@@ -103,12 +103,6 @@ loadInterests() {
   this.authService.getInterests().subscribe({
     next: (res) => {
       this.interests = res.data;
-      const defaultInterest = this.interests.find(i => i.interest_name === 'Jobs');
-      if (defaultInterest) {
-        this.communityForm.patchValue({
-         interests : [defaultInterest.interest_id]
-        });
-      }
     },
     error: () => {
       this.toastService.error('Failed to load countries');
@@ -149,7 +143,13 @@ loadInterests() {
 
   openCreateModal(): void {
     this.editingCommunity.set(null);
+    const defaultInterest = this.interests.find(i => i.interest_name === 'Jobs');
     this.communityForm.reset();
+    if (defaultInterest) {
+        this.communityForm.patchValue({
+         interests : [defaultInterest.interest_id]
+        });
+      }
     this.selectedImage.set(null);
     this.imagePreview.set(null);
     this.showModal.set(true);
@@ -157,9 +157,16 @@ loadInterests() {
 
   openEditModal(community: Community): void {
     this.editingCommunity.set(community);
+    debugger
     this.communityForm.patchValue({
       communityName: community.community_name,
-      description: community.description
+      interests: community.interest_id,
+      description: community.description,
+      image: community.profile_image_url,
+      isPrivate: community.is_private,
+      isGlobal: community.is_global,
+      isDefault: community.is_default,
+      countryId: community.country_id
     });
     this.imagePreview.set(community.profile_image_url || null);
     this.selectedImage.set(null);
@@ -206,13 +213,7 @@ loadInterests() {
     const payload = this.mapToPayload(communityData);
 
     if (this.isEditing()) {
-      const community = this.editingCommunity()!;
-      if (image) {
-        this.apiService.putWithFile<Community>(
-          `/communities/${community.community_id}`,
-          formData,
-          [{ field: 'image', file: image }]
-        ).subscribe({
+        this.communityService.updateCommunity(payload).subscribe({
           next: () => {
             this.toast.success('Community updated successfully');
             this.closeModal();
@@ -224,39 +225,7 @@ loadInterests() {
             this.submitting.set(false);
           },
         });
-      } else {
-        this.communityService.updateCommunity(community.community_id, formData).subscribe({
-          next: () => {
-            this.toast.success('Community updated successfully');
-            this.closeModal();
-            this.loadCommunities();
-            this.submitting.set(false);
-          },
-          error: () => {
-            this.toast.error('Failed to update community');
-            this.submitting.set(false);
-          },
-        });
-      }
     } else {
-      if (image) {
-        this.apiService.postWithFile<Community>(
-          '/communities',
-          formData,
-          [{ field: 'image', file: image }]
-        ).subscribe({
-          next: () => {
-            this.toast.success('Community created successfully');
-            this.closeModal();
-            this.loadCommunities();
-            this.submitting.set(false);
-          },
-          error: () => {
-            this.toast.error('Failed to create community');
-            this.submitting.set(false);
-          },
-        });
-      } else {
         this.communityService.createCommunity(payload).subscribe({
           next: () => {
             this.toast.success('Community created successfully');
@@ -269,7 +238,6 @@ loadInterests() {
             this.submitting.set(false);
           },
         });
-      }
     }
   }
 
@@ -332,8 +300,9 @@ loadInterests() {
 
   private mapToPayload(form: any): CommunityRequest {
     return {
+      community_id: this.isEditing() ? this.editingCommunity()?.community_id! : undefined,
       community_name: form.communityName,
-      interest: form.interests ? [Number(form.interests)] : [],
+      interests: [form.interests],
       description: form.description,
       is_private: form.isPrivate,
       is_global: form.isGlobal,

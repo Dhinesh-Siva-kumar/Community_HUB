@@ -53,9 +53,10 @@ export interface User {
 }
 
 export interface CommunityRequest {
+  community_id?: number,
   community_name: string;
   description: string;
-  interest : number[];
+  interests : number[];
   is_private: boolean;
   is_global: boolean;
   is_default: boolean;
@@ -78,11 +79,13 @@ is_global: boolean,
 is_private: boolean,
 is_default: boolean,
 is_active: boolean,
+interest_id: number[],
 interests: number[],
 rules: string[],
 member_count: number,
 is_joined: boolean,
-total_count: number
+total_count: number,
+post_count: number
 }
 
 export interface CommunityMember {
