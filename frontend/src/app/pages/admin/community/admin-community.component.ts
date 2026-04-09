@@ -66,7 +66,7 @@ export class AdminCommunityComponent implements OnInit {
 
   initForm(): void {
   this.communityForm = this.fb.group({
-    coummunityName: ['',[Validators.required, Validators.minLength(3), Validators.maxLength(150)]],
+    communityName: ['',[Validators.required, Validators.minLength(3), Validators.maxLength(150)]],
     interests: [null, Validators.required],
     description: ['',[Validators.maxLength(500)]],
     image: [null], // file or URL
@@ -332,7 +332,7 @@ loadInterests() {
 
   private mapToPayload(form: any): CommunityRequest {
     return {
-      community_name: form.coummunityName,
+      community_name: form.communityName,
       interest: form.interests ? [Number(form.interests)] : [],
       description: form.description,
       is_private: form.isPrivate,
